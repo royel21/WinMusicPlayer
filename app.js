@@ -3,6 +3,7 @@ const {
     BrowserWindow,
     ipcMain
 } = require('electron');
+const {renderer} = require('./modules/renderer');
 
 const os = require('os');
 const fs = require('fs-extra');
@@ -22,6 +23,7 @@ if (handleSquirrelEvent(app)) {
 let win;
 var closeNow = false;
 function createWin() {
+    fs.writeFileSync('./index.html', renderer('index'));
     win = new BrowserWindow({
         title: "MangaViewer",
         minHeight: 350,

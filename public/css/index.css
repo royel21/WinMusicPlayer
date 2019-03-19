@@ -16,13 +16,23 @@ body,
     user-select: none;
 }
 
+#win-controls{
+    float: right;
+}
+
 .main {
     position: relative;
     background-color: #14243d;
     background: radial-gradient(ellipse at center, #14243d 0%,#030611 100%);
     border-radius: 1.1em;
     height: 100%;
-    padding: 43px 0;
+    padding-top: 43px;
+}
+
+#container{
+    min-height: calc(100% - 47px);
+    min-width: 100%;
+    border-radius: 0 0 .25rem .25rem;
 }
 
 #title-n{
@@ -42,6 +52,11 @@ body,
     margin-bottom: 0;
 }
 
+.nav-item{
+    position: relative;
+    z-index: 1;
+}
+
 #file-name{
     display: none;
 }
@@ -52,6 +67,7 @@ body,
    flex-wrap: nowrap;
    position: fixed;
    align-items: center;
+   height: 40px;
    top: 0;
    left: 0;
    right: 0;
@@ -60,13 +76,9 @@ body,
    border-radius: 1em 1em 0 0;
 }
 #drag-region{
-    position: absolute;
-    top: -5px;
-    left: 3px;
-    right: 0;
-    height: 38px;
+    height: 47px;
+    flex-grow: 1;
     -webkit-app-region: drag;
-    z-index: 1
 }
 #btn-home,
 #btn-sys-min, 
@@ -74,11 +86,11 @@ body,
 .btn-sys-close{
     display: inline-block;
     width: 45px;
-    padding: 3.5px 10px;
+    padding: 9.5px 10px;
     font-size: 1.5rem;
-    -webkit-app-region: no-drag;
-    z-index: 99;
     flex-shrink: 0;
+    height: 47px;
+    font-size: 30px;
 }
 .fa-trash:hover, .fa-star:hover {
     text-shadow: 0 0 5px #fff;
@@ -95,20 +107,20 @@ body,
    background-color:rgba(53, 237, 243, 0.2);
 }
 .btn-sys-close{
-    border-radius: 0 0.6em 0 0;
+    border-radius: 0 0.25rem 0 0;
 }
 .btn-sys-close:hover{
     background-color: red;
 }
 .content{
-    display: flex;
-    justify-content: center;
+    /* display: flex; */
+    /* flex-direction: column; */
     align-items: center;
     position: relative;
     min-height: 100%;
     height: 100%;
-    overflow-y: auto;
-    padding: 10px;
+    /* overflow-y: auto; */
+    padding: 0px;
 }
 
 #music-list{

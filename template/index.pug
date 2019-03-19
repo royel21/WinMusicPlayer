@@ -1,0 +1,50 @@
+html
+    Head
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        link(rel="stylesheet" href="./public/lib/css/bootstrap.min.css")
+        link(rel="stylesheet" href="./public/lib/css/all.min.css")
+        link(rel="stylesheet" href="./public/css/index.css")
+        link(rel="stylesheet" href="./public/css/nav.css")
+        link(rel="stylesheet" href="./public/css/list.css")
+    body
+        .content
+            .nav.nav-tabs
+                .nav-item
+                    input#tab-playing(type="radio" name="tabs" checked)
+                    label.nav-link(for="tab-playing") Playing Nnow
+                .nav-item
+                    input#tab-list(type="radio" name="tabs" checked)
+                    label.nav-link(for="tab-list") Play List
+                .nav-item
+                    input#tab-all(type="radio" name="tabs" checked)
+                    label.nav-link(for="tab-all") All Audio
+                .nav-item
+                    input#tab-folders(type="radio" name="tabs")
+                    label.nav-link(for="tab-folders") Folders
+                .nav-item
+                    input#tab-shedules(type="radio" name="tabs")
+                    label.nav-link(for="tab-shedules") Shedule Tasks
+                .nav-item
+                    input#tab-directories(type="radio" name="tabs")
+                    label.nav-link(for="tab-directories") Directories
+                #drag-region
+                span#win-controls
+                    span#btn-sys-min.popup-msg(data-title="Minimixe")
+                        i.fas.fa-window-minimize
+                    span#btn-sys-max.popup-msg(data-title="Maximize")
+                        i.fas.fa-window-restore
+                    span.btn-sys-close.popup-msg(data-title="Close")
+                        i.fas.fa-window-close
+            #container.card
+
+        script.
+            if( typeof module === 'object'){
+                window.module = module;
+                module = undefined;
+            }
+        script(src="./public/lib/js/jquery.js")
+        script(src="./public/js/system.js")
+        script(src="./public/js/utils.js")
+        script(src="./public/js/index.js")
+        script.
+            if (window.module) module = window.module

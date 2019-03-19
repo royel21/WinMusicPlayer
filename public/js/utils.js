@@ -1,7 +1,6 @@
 const {
     ipcRenderer
 } = require('electron');
-const WinDrive = require('win-explorer');
 const dialog = app.dialog;
 const fs = require('fs-extra');
 const path = require('path');

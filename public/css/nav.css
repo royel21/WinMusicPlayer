@@ -1,0 +1,139 @@
+#container{
+    flex-direction: column;
+    padding: 5px 5px;
+    user-select: none;
+    height: calc(100% - 42px);
+    overflow-y: hidden;
+}
+
+#container > h2{
+    margin: 0;
+}
+
+#items-container{
+    border: 2px solid;
+    margin: 0;
+    flex-direction: row;
+    height: 100%;
+} 
+
+
+.list-titles{
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+    text-align: center;
+    align-self: center;
+    font-size: 20px;
+    height: 50px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.list-titles #total-videos{
+    position: absolute;
+    top: 14px;
+    right: 5px;
+}
+
+.list{
+    height: calc(100% - 56px);
+}
+
+.list::-webkit-scrollbar-thumb{
+    border-radius: 0;
+}
+
+#video-list{
+    height: calc(100% - 56px);
+}
+
+#items-container .list-group{
+    height: calc(100% - 56px);
+    overflow-y: auto;
+    margin-bottom: 0;
+}
+
+#items-container .title{
+    flex-grow: 1;
+    align-self: center;
+    font-size: 30px;
+}
+
+
+#items-container .col-6{
+    border-right: 2px solid;
+    height: 100%;
+    padding: 0;
+}
+
+.content-list .list-group-item{
+    cursor: pointer;
+}
+
+.nav-tabs{
+    border-bottom: 0;
+    background-color: wheat;
+    border-radius: 0.25rem .25rem 0 0;
+}
+.nav input[type="radio"]{
+    display: none;
+}
+
+.nav input[type="radio"]:checked + label{
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.nav .nav-item label{
+    display: inline-block;
+    margin: 0;
+    margin-top: 5px;
+    height: 43px;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 5px 5px 0 0;
+    cursor: pointer;
+}
+
+#items-container .list-group-item{
+    padding: 0.39rem 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    min-height: 40px;
+}
+
+#.list-group-item .v-name{
+    white-space: nowrap;
+}
+
+#items-container .list-group-item span i{
+    margin: 0 6px;
+    font-size: 1.4rem;
+}
+
+#items-container .list-group-item:first-child{
+    border-radius: 0;
+}
+.controls{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    font-size: 2em;
+    height: 50px;
+    padding: 0 4px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+
+#items-container .btn{
+    align-self: center;
+}
+
+#modal .file-form{
+    width: initial;
+}
+
+#modal .file-form input{
+    display: none;
+}

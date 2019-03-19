@@ -1,0 +1,26 @@
+.list-control{
+    position: relative;
+    width: 100%;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    border-bottom: 1px solid black;
+}
+
+#Add-new{
+    position: absolute;
+    top: 13px;
+    left: 5px;
+    font-size: 2rem;
+}
+#list-dirs{
+    overflow: auto;
+}
+
+#list-dirs::-webkit-scrollbar{
+    width: 14px;
+}
+
+#list-dirs ul{
+    padding: 0;
+}
