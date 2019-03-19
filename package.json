@@ -1,0 +1,44 @@
+{
+  "productName": "WinMusicPlayer",
+  "name": "win-music-player",
+  "appId": "rc.win-music-player",
+  "version": "0.1.0",
+  "description": "A Windows Music Player with sheduling",
+  "main": "app.js",
+  "scripts": {
+    "start": "electron app.js",
+    "rebuild": "./node_modules/.bin/electron-rebuild -f -w sharp",
+    "dist": "electron-packager . --overwrite && node build.js "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/royel21/WinMusicPlayer.git"
+  },
+  "keywords": [
+    "mp3",
+    "mp4",
+    "ogg",
+    "music",
+    "window",
+    "javascript",
+    "css"
+  ],
+  "author": "RC Inc.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/royel21/WinMusicPlayer/issues"
+  },
+  "homepage": "https://github.com/royel21/WinMusicPlayer#readme",
+  "dependencies": {
+    "electron": "^4.1.0",
+    "electron-packager": "^13.1.1",
+    "electron-rebuild": "^1.8.4",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-winstaller": "^3.0.4",
+    "fs-extra": "^7.0.1",
+    "sequelize": "^5.1.0",
+    "sequelize-cli": "^5.4.0",
+    "sqlite3": "^4.0.6",
+    "win-explorer": "file:../local_modules/win-explorer"
+  }
+}

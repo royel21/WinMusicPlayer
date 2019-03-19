@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<script type="text/javascript">
+    const ipc = require('electron').ipcRenderer;
+    const BrowserWindow = require('electron').remote.BrowserWindow;
+    const fs = require('fs-extra');
+    const path = require('path');
+    const app = require('electron').remote.app
+    const WinDrive = require('win-explorer');
+    const db = require(path.join(path.dirname(__dirname), './models'));
+    var images = ['png', 'gif', 'jpg', 'jpeg', 'webp'];
+
+    fileFilter = ['mp3', 'ogg'];
+
+    var count = 0;
+    var appPath = path.join(path.dirname(__dirname));
+    var startTime, endTime;
+    var currentDir = localStorage.getItem('currentDir');
+    Storage.prototype.getObject = function (key) {
+        var value = this.getItem(key);
+        if (value == "undefined") return [];
+        return value && JSON.parse(value);
+    }
+
+    ipc.on('remove-files', function (event, data, fromWindowId) {
+        let fromWindow = BrowserWindow.fromId(fromWindowId)
+        fs.removeSync(data.dir);
+        fromWindow.webContents.send('files-removed', data.index);
+        fromWindow.webContents.send('finish-proc');
+        window.close();
+    });
+
+    var timer = 0;
+    ipc.on('reload-Db', function (event, data, fromWindowId) {
+        let fromWindow = BrowserWindow.fromId(fromWindowId);
+
+        scanOneDir = async (f) => {
+            var fis = WinDrive.ListFilesRO(f.dir);
+            await PopulateDB(f.dir, fis);
+        }
+
+        scanDirs = async () => {
+            timer = new Date();
+            if(data.resetDb){
+                await db.init(true);
+            }
+            for (var f of data.folders) {
+                await scanOneDir(f);
+            }
+            fromWindow.webContents.send('error', "Scan Done: " + (new Date() - timer));
+            window.close();
+        }
+
+        PopulateDB = async (folder, files, id) => {
+            var fis = files.filter((f) => {
+                return f.isDirectory || fileFilter.includes(f.extension.toLocaleLowerCase()) &&
+                    !f.isHidden
+            });
+            var f1 = await db.Folder.findOrCreate({
+                where: {
+                    Name: folder
+                }
+            });
+
+            if (id) {
+                f1[0].updateAttributes({
+                    folderId: id
+                });
+            }
+
+            var files = [];
+            var foundFiles = [];
+            for (var f of fis) {
+                var file = undefined;
+                try {
+                    if (!f.isDirectory) {
+                        file = await db.File.findOne({
+                            where: {
+                                Name: f.FileName, folderId: f1[0].Id
+                            }
+                        });
+                        if (file == null) {
+                            files.push({
+                                Name: f.FileName,
+                                Size: f.Size,
+                                folderId: f1[0].Id
+                            });
+                        } else {
+                            if (f.Size === 0) {
+                                file.updateAttributes({
+                                    Size: f.Size
+                                });
+                            }
+
+                            if (!file.folderId) {
+                                foundFiles.push(file);
+                            }
+                        }
+                    } else {
+                        await PopulateDB(f.FileName, f.Files, f1[0].Id);
+                    }
+                } catch (error) {
+                    fromWindow.webContents.send('error', f1[0].Name);
+                    fromWindow.webContents.send('error', error);
+                    console.log(error)
+                }
+            }
+            if (files.length > 0) await db.File.bulkCreate(files);
+            if (foundFiles.length > 0) await f1[0].addFiles(foundFiles);
+        }
+
+        scanDirs();
+    });
+
+</script>
+
+</html>

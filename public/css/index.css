@@ -1,0 +1,340 @@
+body,
+html {
+	background: rgba(0, 0, 0, 0);
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body,
+#item-file,
+#item-cover,
+#item-file img {
+    user-select: none;
+}
+
+.main {
+    position: relative;
+    background-color: #14243d;
+    background: radial-gradient(ellipse at center, #14243d 0%,#030611 100%);
+    border-radius: 1.1em;
+    height: 100%;
+    padding: 43px 0;
+}
+
+#title-n{
+    position: relative;
+    flex-grow: 1;
+    flex-shrink: 1;
+    align-content: center;
+    padding: 3px 3px 3px 10px;
+    overflow: hidden;
+}
+
+.title{
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+#file-name{
+    display: none;
+}
+
+.menubar{
+   display: flex;
+   flex-direction: row;
+   flex-wrap: nowrap;
+   position: fixed;
+   align-items: center;
+   top: 0;
+   left: 0;
+   right: 0;
+   background: rgba(67, 66, 75, 1);
+   z-index: 9999;
+   border-radius: 1em 1em 0 0;
+}
+#drag-region{
+    position: absolute;
+    top: -5px;
+    left: 3px;
+    right: 0;
+    height: 38px;
+    -webkit-app-region: drag;
+    z-index: 1
+}
+#btn-home,
+#btn-sys-min, 
+#btn-sys-max,
+.btn-sys-close{
+    display: inline-block;
+    width: 45px;
+    padding: 3.5px 10px;
+    font-size: 1.5rem;
+    -webkit-app-region: no-drag;
+    z-index: 99;
+    flex-shrink: 0;
+}
+.fa-trash:hover, .fa-star:hover {
+    text-shadow: 0 0 5px #fff;
+}
+#btn-home:hover{
+    border-radius: 0.6em 0 0 0;
+}
+
+#btn-home:hover,
+#btn-sys-min:hover, 
+#btn-sys-max:hover,
+.btn-sys-close:hover{
+   cursor: pointer;
+   background-color:rgba(53, 237, 243, 0.2);
+}
+.btn-sys-close{
+    border-radius: 0 0.6em 0 0;
+}
+.btn-sys-close:hover{
+    background-color: red;
+}
+.content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    min-height: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+#music-list{
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.hidden {
+    display: none;
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    width: 350px;
+    height: 300px;
+    min-height: 300px;
+    min-width: 350px;
+    z-index: 15;
+    font-weight: bold;
+    color: white;
+    top: auto;
+    right: auto;
+    border: 1px solid;
+}
+
+#modal-search{
+    display: none;
+    position: fixed;
+    width: 250px;
+    min-height: 10px;
+    min-width: 250px;
+    height: 40px;
+    z-index: 12;
+    bottom: 45px;
+    left: calc(100%/2 - 125px);
+}
+
+#modal-search #search-icon
+{
+    position: absolute;
+    top: 10px;
+    left: 8px;
+    color: grey;
+    z-index: 10;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#modal-search #modal-search-box
+{
+    padding: .375rem .25rem;
+    pointer-events: all
+}
+
+#modal-search .input-group span{
+    font-size: 1.6rem;
+    margin: 0 8px;
+}
+#modal-body{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#modal-footer{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 0.35rem;
+    font-weight: bold;
+}
+
+#drag-config
+{
+    cursor: pointer;
+    padding: 0.5rem;
+    font-weight: bold;
+}
+
+.loadding {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    left: 0;
+    top: 100px;
+    right: 0;
+    bottom: 100px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+ /**************** Loading Animation***********************/
+.loader,
+.loader:after {
+    border-radius: 50%;
+    width: 250px;
+    height: 250px;
+}
+.loader {          
+    position: absolute;  
+    margin: auto;
+    border-top: 1.1em solid rgba(255, 255, 255, 0.2);
+    border-right: 1.1em solid #ffffff;
+    border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+    border-left: 1.1em solid #ffffff;
+    transform: translateZ(0);
+    animation: load8 1.1s infinite linear;
+}
+@keyframes load8 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+#loadingDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position:fixed;
+    top:50px;
+    left:0;
+    right: 0;
+    bottom: 50px;
+    overflow: hidden;
+    z-index: 9999;
+}
+#loading-msg, #loading-msg:after{
+    margin: auto;
+    color: white;
+    content: ".";
+    font-size: 2rem;
+}
+
+#loading-msg:after{
+    animation: load-msg 1.5s infinite linear;
+}
+@keyframes load-msg {
+    0% {
+        content: ".";
+    }
+    25%{
+        content: "..";
+    }
+    50%{
+        content: "...";
+    }
+    75%{
+        content: "....";
+    }
+    95%{
+        content: ".....";
+    }
+}
+
+ /*************************Scrollbar Style********************************/
+ ::-webkit-scrollbar {
+    width: 25px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(0, 123, 255, .95);
+    box-shadow: inset 0 0 6px rgba(15, 1, 228, 0.9);
+}
+/************************* End ********************************/
+
+
+#context-menu{
+    display: none;
+    background-color: rgba(52,58,64,0.8);
+    width: 145px;
+    color: white;
+    position: fixed;
+    top: 100px;
+    z-index: 9999;
+    border-radius: 5px;
+}
+
+#context-menu li{
+    list-style-type: none;
+    padding: 5px 11px;
+    cursor: pointer;
+}
+
+#context-menu li:not(:last-child){
+    border-bottom: 1px solid white;
+}
+
+#context-menu li:hover{
+    background-color: rgba(102,108,114,0.90);
+}
+
+#context-menu li:first-child:hover{
+    border-radius: 5px 5px 0 0;
+}
+#context-menu li:last-child:hover{
+    border-radius: 0 0 5px 5px;
+}
+
+.loadding .fa-spinner {
+    font-size: 12.0em;
+}
+
+@media all and (min-width: 700px) {
+    .loadding .fa-spinner {
+        font-size: 15em;
+    }
+}
+
+@media all and (min-width: 900px) {
+    .loadding .fa-spinner {
+        font-size: 20em;
+    }
+}
+
+@media all and (min-width: 1200px) {
+    .loadding .fa-spinner {
+        font-size: 25em;
+    }
+}
