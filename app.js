@@ -27,7 +27,7 @@ function createWin() {
     win = new BrowserWindow({
         title: "MangaViewer",
         minHeight: 350,
-        minWidth: 700,
+        minWidth: 800,
         show: false,
         transparent: true,
         frame: false,

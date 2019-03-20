@@ -11,19 +11,23 @@ html
             .nav.nav-tabs
                 .nav-item
                     input#tab-playing(type="radio" name="tabs" checked)
-                    label.nav-link(for="tab-playing") Playing Nnow
+                    label.nav-link(for="tab-playing") Player
                 .nav-item
                     input#tab-list(type="radio" name="tabs" checked)
                     label.nav-link(for="tab-list") Play List
                 .nav-item
                     input#tab-all(type="radio" name="tabs" checked)
-                    label.nav-link(for="tab-all") All Audio
+                    label.nav-link(for="tab-all")
+                        i.fas.fa-music
                 .nav-item
                     input#tab-folders(type="radio" name="tabs")
-                    label.nav-link(for="tab-folders") Folders
+                    label.nav-link(for="tab-folders")
+                        i.fas.fa-folder
+                            i.fas.fa-music
                 .nav-item
                     input#tab-shedules(type="radio" name="tabs")
-                    label.nav-link(for="tab-shedules") Shedule Tasks
+                    label.nav-link(for="tab-shedules")
+                        i.fas.fa-tasks Tasks
                 .nav-item
                     input#tab-directories(type="radio" name="tabs")
                     label.nav-link(for="tab-directories") Directories

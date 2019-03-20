@@ -1,7 +1,4 @@
-const {
-    ipcRenderer
-} = require('electron');
-const dialog = app.dialog;
+
 const fs = require('fs-extra');
 const path = require('path');
 const local = localStorage;

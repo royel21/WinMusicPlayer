@@ -1,3 +1,7 @@
 node_modules/
 public/lib/
-local_modules/
+local_modules/win-explorer/node_modules/
+local_modules/win-explorer/.vscode/
+local_modules/win-explorer/bin/
+local_modules/win-explorer/build/
+local_modules/win-explorer/test/

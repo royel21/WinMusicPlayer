@@ -1,0 +1,21 @@
+{
+  "name": "win-explorer",
+  "version": "0.1.0",
+  "description": "Help to list driver and file in windows with attributes",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "install": "node-gyp rebuild"
+  },
+  "keywords": [
+    "Win"
+  ],
+  "author": "R Consoro",
+  "license": "MIT",
+  "gypfile": true,
+  "dependencies": {
+    "node-addon-api": "^1.4.0"
+  }
+}

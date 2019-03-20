@@ -95,7 +95,24 @@
     border-radius: 5px 5px 0 0;
     cursor: pointer;
 }
+.nav .nav-item i{
+    font-size: 28px;
+}
+.nav .nav-item label .fa-folder{
+    position: relative;
+    font-size: 32px;
+}
 
+.nav .nav-item label .fa-folder .fa-music{
+    position: absolute;
+    top: 11px;
+    left: 7px;
+    color: white;
+    font-size: 15px;
+}
+.nav .nav-item input[type=radio]:checked + label .fa-folder .fa-music{
+    color: black;
+}
 #items-container .list-group-item{
     padding: 0.39rem 0.2rem;
     white-space: nowrap;

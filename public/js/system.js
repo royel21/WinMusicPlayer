@@ -1,5 +1,9 @@
-
+const {
+    ipcRenderer
+} = require('electron');
 const app = require('electron').remote;
+const dialog = app.dialog;
+
 const mainWindow = app.getCurrentWindow();
 var isMaximized = false;
 
@@ -43,6 +47,15 @@ setfullscreen = () => {
         mainWindow.setResizable(true);
     }
 }
+
+ipcRenderer.on('save-file', (e) => {
+//     local.setObject('config', config);
+//     updateFile(currentFile).then(() => {
+//         ipcRenderer.send('close', currentFile);
+//     });
+    ipcRenderer.send('close', "");
+});
+
 $('#btn-sys-min').on('click', minWindow);
 $('#btn-sys-max').on('click', maxWindow);
 $('.btn-sys-close').on('click', closeWindow);
