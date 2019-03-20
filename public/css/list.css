@@ -13,14 +13,18 @@
     left: 5px;
     font-size: 2rem;
 }
-#list-dirs{
+
+.list-container{
     overflow: auto;
 }
 
-#list-dirs::-webkit-scrollbar{
+.list-container::-webkit-scrollbar{
     width: 14px;
 }
 
-#list-dirs ul{
+.list-container ul{
     padding: 0;
+}
+#play-list{
+     height: calc(100% - 51px);
 }

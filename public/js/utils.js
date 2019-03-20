@@ -13,27 +13,25 @@ const invisPath = `file://${path.join(__dirname, 'background/createthumb.html')}
 const windowID = mainWindow.id;
 
 createBackgroundWin = (event, data) => {
-    setTimeout(() => {
-        var e = event;
-        var d = data;
-        var win = new BrowserWindow({
-            width: 1,
-            height: 1,
-            show: false
-            // width: 1000,
-            // height: 1000,
-            // show: true
-        });
-        win.loadURL(invisPath);
-        win.webContents.on('did-finish-load', () => {
-            try {
-                win.webContents.send(e, d, windowID);
-            } catch (error) {}
-        });
-        win.on('closed', (e) => {
-            win = null;
-        });
-    }, 0)
+    var e = event;
+    var d = data;
+    var win = new BrowserWindow({
+        width: 1,
+        height: 1,
+        show: false
+        // width: 1000,
+        // height: 1000,
+        // show: true
+    });
+    win.loadURL(invisPath);
+    win.webContents.on('did-finish-load', () => {
+        try {
+            win.webContents.send(e, d, windowID);
+        } catch (error) { }
+    });
+    win.on('closed', (e) => {
+        win = null;
+    });
 }
 
 template = (file, data) => {
@@ -101,54 +99,27 @@ Object.defineProperty(Array.prototype, "last", {
     }
 });
 
-function FormattBytes(b) {
-    if (b === undefined) return "";
-
-    if (typeof b === 'number') {
-        var div = [];
-        var mul = 1024
-        switch (b) {
-            case ((b >= 0 && b <= mul) ? b : -1):
-                {
-                    div.push(0)
-                    div.push("B")
-                    break;
-                }
-            case ((b >= mul && b <= mul ** 2) ? b : -1):
-                {
-                    div.push(1)
-                    div.push("KB")
-                    break;
-                }
-            case ((b >= mul ** 2 && b <= mul ** 3) ? b : -1):
-                {
-                    div.push(2)
-                    div.push("MB")
-                    break;
-                }
-            default:
-                {
-                    div.push(3)
-                    div.push("GB")
-                    break;
-                }
-        }
-        return Number(b / 1024 ** div[0]).toFixed(2) + div[1];
-    } else
-        return "";
-}
 function nameFormat(name, padding = 3) {
     var res1 = name.split(/\d+/g);
     var res2 = name.match(/\d+/g);
     var temp = name;
-    if (res1 == null && res2 == null){
+    if (res1 == null && res2 == null) {
         for (let [i, s] of res2.entries()) {
             temp += res1[i] + String(Number(s)).padStart(padding, 0);
         }
         temp = temp + res1[res1.length - 1];
     }
-    
+
     var elem = document.createElement('textarea');
     elem.innerHTML = temp.replace(/[\\|?|<|>|*|:|"]/ig, '').replace("  ", " ");
     return elem.value;
+}
+
+
+formatTime = (time) => {
+    var h = Math.floor(time / 3600);
+    var min = Math.floor((time / 3600 - h) * 60);
+    var sec = Math.floor(time % 60);
+    return (h == 0 ? "" : String(h).padStart(2, "0") + ':') +
+        String(min).padStart(2, "0") + ':' + String(sec).padStart(2, "0");
 }

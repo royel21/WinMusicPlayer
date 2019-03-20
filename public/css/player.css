@@ -1,0 +1,57 @@
+#a-player{
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: wheat;
+    border-radius: 0 0 .25rem .25rem;
+    z-index: 99;
+}
+
+#a-player > span{
+    font-size: 2rem;
+    margin: 5px;
+}
+
+#a-player #v-total-time{
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+#slider-container{
+    flex-grow: 1;
+    padding: 0 20px;
+}
+
+#a-player input[type=checkbox]{
+    display: none;
+}
+#v-vol{
+    position: relative;
+}
+
+label[for=v-mute]{
+    width: 45px;
+    margin-left: 10px;
+}
+
+#vol-slider[value="0"] + label #vol-icon:after{
+    content: '\f6a9';
+}
+
+#v-mute:checked + #vol-icon:after{
+   content: '\f6a9';
+}
+
+#vol-icon:after{
+    content: '\f028';
+}
+
+#v-play:checked+i:before {
+    content: "\f28b";
+}
+
+.v-controls .v-vol *{
+    cursor: pointer;
+}

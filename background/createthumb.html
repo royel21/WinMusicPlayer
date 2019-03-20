@@ -7,15 +7,17 @@
     const path = require('path');
     const app = require('electron').remote.app
     const WinDrive = require('win-explorer');
+    console.log()
     const db = require(path.join(path.dirname(__dirname), './models'));
-    var images = ['png', 'gif', 'jpg', 'jpeg', 'webp'];
+    const { NormalizeName } = require(path.join(path.dirname(__dirname), './utils/StringUtil'));
 
-    fileFilter = ['mp3', 'ogg'];
+    fileFilter = ['mp3', 'ogg', 'm4a'];
 
     var count = 0;
     var appPath = path.join(path.dirname(__dirname));
     var startTime, endTime;
     var currentDir = localStorage.getItem('currentDir');
+
     Storage.prototype.getObject = function (key) {
         var value = this.getItem(key);
         if (value == "undefined") return [];
@@ -31,82 +33,87 @@
     });
 
     var timer = 0;
-    ipc.on('reload-Db', function (event, data, fromWindowId) {
+    ipc.on('scan-dirs', function (event, data, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId);
-
-        scanOneDir = async (f) => {
-            var fis = WinDrive.ListFilesRO(f.dir);
-            await PopulateDB(f.dir, fis);
+        var tempFiles = [];
+        
+        let total = 0;
+        scanOneDir = async (dir) => {
+            var fis = WinDrive.ListFilesRO(dir);
+            await PopulateDB(dir, fis);
+            console.log(tempFiles.length)
+            if (tempFiles.length > 0) {
+                try {
+                    await db.audiofile.bulkCreate(tempFiles);
+                } catch (err) {
+                    console.log(err)
+                    fromWindow.webContents.send('error', err);
+                }
+            }
+            console.log(total)
+            tempFiles = [];
         }
 
         scanDirs = async () => {
             timer = new Date();
-            if(data.resetDb){
-                await db.init(true);
-            }
-            for (var f of data.folders) {
-                await scanOneDir(f);
+            let dirs = localStorage.getObject('directories');
+            if (dirs) {
+                for (var f of dirs) {
+                    await scanOneDir(f.path);
+                }
             }
             fromWindow.webContents.send('error', "Scan Done: " + (new Date() - timer));
             window.close();
         }
-
         PopulateDB = async (folder, files, id) => {
             var fis = files.filter((f) => {
                 return f.isDirectory || fileFilter.includes(f.extension.toLocaleLowerCase()) &&
                     !f.isHidden
             });
-            var f1 = await db.Folder.findOrCreate({
+            
+            if(fis.length === 0) return;
+
+            var f1 = await db.directory.findOrCreate({
                 where: {
-                    Name: folder
+                    Path: folder
                 }
             });
 
-            if (id) {
-                f1[0].updateAttributes({
-                    folderId: id
+            if (!f1[0].DirectoryId) {
+                f1[0].update({
+                    DirectoryId: id
                 });
             }
-
-            var files = [];
-            var foundFiles = [];
             for (var f of fis) {
                 var file = undefined;
                 try {
                     if (!f.isDirectory) {
-                        file = await db.File.findOne({
+                        total++;
+                        let found = tempFiles.find(v => v.Name === f.FileName);
+                        file = await db.audiofile.findOne({
                             where: {
-                                Name: f.FileName, folderId: f1[0].Id
+                                Name: f.FileName
                             }
                         });
-                        if (file == null) {
-                            files.push({
+                        
+                        if (!file && !found) {
+                            tempFiles.push({
                                 Name: f.FileName,
-                                Size: f.Size,
-                                folderId: f1[0].Id
+                                NameNormalize: NormalizeName(f.FileName),
+                                DirectoryId: f1[0].Id
                             });
-                        } else {
-                            if (f.Size === 0) {
-                                file.updateAttributes({
-                                    Size: f.Size
-                                });
-                            }
-
-                            if (!file.folderId) {
-                                foundFiles.push(file);
-                            }
+                        }else{
+                           if(found) fromWindow.webContents.send('error', "Duplicate: "+ found.Name);
                         }
                     } else {
                         await PopulateDB(f.FileName, f.Files, f1[0].Id);
                     }
                 } catch (error) {
+                    console.log(error);
                     fromWindow.webContents.send('error', f1[0].Name);
                     fromWindow.webContents.send('error', error);
-                    console.log(error)
                 }
             }
-            if (files.length > 0) await db.File.bulkCreate(files);
-            if (foundFiles.length > 0) await f1[0].addFiles(foundFiles);
         }
 
         scanDirs();

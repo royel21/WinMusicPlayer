@@ -1,0 +1,25 @@
+#play-list.list-container
+    ul.list-group-flush
+        for aud in files
+            li.list-group-item(id=aud.Id)
+                span#aud-name= aud.Name
+#a-player
+    audio#player(autoplay=true)
+    span#v-prev
+        i.far.fa-arrow-alt-circle-left.popup-msg(data-title="Anterior")
+    </span>
+    span#v-play-pause
+        label(for="v-play")
+            input#v-play(type="checkbox")
+            i.far.fa-play-circle.popup-msg(data-title="Pausar")
+    span#v-next
+        i.far.fa-arrow-alt-circle-right.popup-msg(data-title="Proximo")
+    #slider-container
+    span#v-total-time 00:00/00:00
+    span.v-vol
+        input#vol-slider.range.popup-msg(data-title="Volumen" type="range"
+            min="0" step="0.01" value="0.5" max="1")
+        label(for="v-mute")
+            input#v-mute.vol-ctrl(type="checkbox")
+            i.fas.popup-msg(id="vol-icon" data-title="Silenciar")
+    
