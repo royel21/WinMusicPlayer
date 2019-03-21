@@ -97,7 +97,8 @@
 
             var f1 = await db.directory.findOrCreate({
                 where: {
-                    Path: folder
+                    Path: folder,
+                    Name: path.basename(folder)
                 }
             });
 

@@ -1,0 +1,67 @@
+mixin pagination(total, data)
+    -let currentPage = parseInt(data.currentPage)
+    -let totalPages = parseInt(data.totalPages)
+    -let itemsPerPage = parseInt(data.itemsPerPage)
+    -let search = data.search
+    -let step = data.step || 6
+    if totalPages > 1 
+        div#pager
+            ul.pagination
+                li.page-item
+                    select#page-select.form-control(name="page")
+                        -for(let i = 1; i < totalPages+1; i++)
+                            option(value=""+i selected=(currentPage == i ? true : false))= i
+                        
+                
+                if currentPage == 1
+                    li.page-item.disabled
+                        a.page-link
+                            i.fa.fa-angle-double-left
+                    li.page-item.disabled
+                        a.page-link
+                            i.fa.fa-angle-left
+                else
+                    li.page-item
+                        a.page-link(data-page=1)
+                            i.fa.fa-angle-double-left
+                    li.page-item
+                        a.page-link(data-page=currentPage-1)
+                            i.fa.fa-angle-left
+                    
+                -for (let i = currentPage - page; i <= currentPage - 1; i++)
+                    -if (i > 0)
+                        li.page-item
+                            a.page-link(data-page=i)= i
+                li.page-item.active
+                    a.page-link= currentPage
+
+                -for (let i = currentPage + 1; i <= currentPage + page; i++)
+                    -if (i < parseInt(totalPages)+1)
+                        li.page-item
+                            a.page-link(data-page=i)= i
+                
+                if currentPage == totalPages
+                    li.page-item.disabled
+                        a.page-link
+                            i.fa.fa-angle-right
+                    li.page-item.disabled
+                        a.page-link
+                            i.fa.fa-angle-double-right
+                else
+                    li.page-item
+                        a.page-link(data-page=parseInt(currentPage)+1)
+                            i.fa.fa-angle-right
+                    li.page-item
+                        a.page-link(data-page=totalPages)
+                            i.fa.fa-angle-double-right
+    if !noItems
+        #itemsPerPage(data-itemsperpage=itemsPerPage)
+            #items.input-group
+                .input-group-prepend
+                    label.input-group-text(for="items" value="") Items
+                select#item.form-control(name="items")
+                    -let selected = false
+                    -for(let i = step; i < total; i += step)
+                        option(value=""+i selected=(itemsPerPage === i ? true : false))= i
+                        -if(itemsPerPage === i) selected = true
+                    option(value=""+total selected=!selected)= total

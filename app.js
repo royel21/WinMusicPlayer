@@ -47,8 +47,8 @@ function createWin() {
             e.preventDefault();
             win.webContents.send('save-file', "");
             closeNow = true;
+            console.log('file-save')
         }
-        // app.quit();
     });
 
     //This is used in mac for recreate the window

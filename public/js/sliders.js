@@ -21,7 +21,7 @@ class SliderRange {
                 </div>`);
 
         this.$element.empty().append(this.$slider);
-
+        this.$slider.find('.rc-progress')[0].style.width = "0";
         this.$slider.find('.rc-track').mousedown((e) => {
             this.isSliderThumbPressed = true;
             this.updateValue(e.pageX - this.getOffset());
@@ -118,7 +118,7 @@ class SliderRange {
     }
 
     updatePos() {
-        if (typeof this._value === "number") {
+        if (typeof this._value === "number" && this.min !== this.max) {
             setTimeout(() => {
                 var pos = this._value.map(this._min, this._max, 0, 100).toFixed(2) + "%";
                 this.$slider.find('.rc-thumb')[0].style.left = `calc(${pos} - 13px)`;

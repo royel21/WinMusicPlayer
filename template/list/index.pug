@@ -1,0 +1,59 @@
+extends ../share/layout
+
+block css
+    link(rel="stylesheet" href="/css/admin.css" type="text/css")
+    link(rel="stylesheet" href="/css/modal.css" type="text/css")
+    link(rel="stylesheet" href="/css/tree-view.css" type="text/css")
+    link(rel="stylesheet" href="/css/series.css" type="text/css")
+
+block navbar
+    include ../share/navbar
+    +navbar(user, url)
+    input#ctl-nav(type="checkbox")
+    label#nav-btn(for="ctl-nav")
+        i.fa.fa-chevron-circle-right
+    .sidenav
+        ul#mytab.navbar.navbar-dark.nav-tabs(role="tablist")
+            li.nav-item
+                a.nav-link(href="/admin/users" class=""+(users ? "active" : ""))
+                    i.fa.fa-users.text-primary
+                        span Usuarios
+            li.nav-item
+                a.nav-link(href="/admin/series" class=""+(id && id.includes('serie') ? "active" : ""))
+                    i.fas.fa-film.text-primary
+                        span Series
+            li.nav-item
+                a.nav-link(href="/admin/movies" class=""+(movies ? "active" : ""))
+                    i.fas.fa-film.text-primary
+                        span Peliculas
+            li.nav-item
+                a.nav-link(href="/admin/categories" class=""+(id && id.includes('category') ? "active" : ""))
+                    i.fas.fa-tags.text-primary
+                        span Categorias
+            li.nav-item
+                a.nav-link(href="/admin/configs" class=""+(directories ? "active" : ""))
+                    i.fas.fa-cogs.text-primary
+                        span Directorios
+
+block content
+    -let pageScript = ""
+    if users
+        include ./users/users-table
+        +users_table(users, pagedatas)
+    else if movies
+        include ./movies/movies-table
+        +movies_table(movies, pagedatas)
+        -pageScript = "/js/movies.js"
+    else if items
+        include ./items_home
+        +items_home(items, videos, videopages, itemspages, title, id)
+        -pageScript = "/js/series.js"
+    else if directories
+        include ./configs/configs
+        +configs(directories, pagedatas)
+        -pageScript = "/js/directories.js"
+
+block script
+    script(src="/js/main.js")
+    script(src="/js/admin.js")
+    script(id="pagescript" src=""+pageScript)

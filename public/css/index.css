@@ -195,3 +195,54 @@ span i.far:active{
     border: 1px solid #000000; 
     box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
 }
+/******************************************************************/
+
+#pager{
+    align-self: center;
+}
+
+.btn-search{
+    cursor: pointer;
+}
+
+.btn-search:active{
+    font-size: .9rem;
+}
+
+#pager{
+    display: inline-block; 
+    align-self: center; 
+}
+
+#pager a{
+    font-size: 24px;
+}
+
+#pager .fa{
+    font-weight: 600;
+    font-size: 22px;
+}
+
+#pager .page-item:last-child .page-link{
+    border-radius: 0 0.25rem 0.25rem 0;;
+}
+
+.search-container{
+    display: flex;
+    align-items: center;
+    width: 200px;
+}
+
+.search-container span .fa-times-circle{
+    display: none;
+    position: absolute;
+    top: 9px;
+    right: 5px;
+    font-size: 20px;
+    color: firebrick;
+    z-index: 99;
+}
+
+.search-input:not(:placeholder-shown) + span .fa-times-circle{
+    display: initial;
+}

@@ -1,0 +1,21 @@
+mixin items_list(items, itemspages, id)
+    -let noItems = true
+    #items-list.list
+        .controls
+            span.btn.btn-primary.show-form Crear 
+                i.fas.fa-plus-circle
+            include ../share/search
+            +search(itemspages, itemspages.action+"search-"+id, 'search-'+id)
+            include ../share/pagination
+            +pagination(items.count, itemspages, noItems)
+        
+        ul.list-group.content-list
+            each item, index in items.rows
+                li.list-group-item(id=item.Id class=""+ (index === 0 ? "active" : "") )
+                    span.show-form                   
+                        i.ml-1.fas.fa-edit
+                    span.remove
+                        i.mx-1.text-danger.fas.fa-trash-alt
+                    span.item-name= item.Name
+                
+                

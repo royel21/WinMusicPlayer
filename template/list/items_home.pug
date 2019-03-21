@@ -1,0 +1,21 @@
+
+#items-container.card.text-dark.row
+    .col-6
+        .list-titles
+            .title
+                span= items.count+" - "+title
+        //- include ./items-list
+        //- +items_list(items, itemspages, id)
+    .col-6
+        .list-titles
+            .nav.nav-tabs
+                .nav-item
+                    input#tab-list-videos(type="radio" name="tabs" checked)
+                    label.nav-link(for="tab-list-videos") Lista de videos
+                .nav-item
+                    input#tab-all-videos(type="radio" name="tabs")
+                    label.nav-link(for="tab-all-videos") Todos los Videos
+            span#total-videos.badge.badge-primary= videos.count
+                //- include ./video-list
+                //- +videoList(videos, videopages)
+                

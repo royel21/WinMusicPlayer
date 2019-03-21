@@ -1,0 +1,15 @@
+mixin search(buttonTest)
+    form#search-form
+        .controls
+            if buttonTest
+                span.btn.btn-primary.show-form= buttonTest 
+                    i.fas.fa-plus-circle
+            .search-container
+                .input-group
+                    .input-group-prepend
+                        button.btn-search.input-group-text(type="submit")
+                            i.fa.fa-search
+                    input.search-input.form-control(type="text" name="search" value="" placeholder="Search" required)
+                    span.clear-search
+                        i.fas.fa-times-circle
+            
