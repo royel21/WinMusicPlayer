@@ -28,3 +28,7 @@
 #play-list{
      height: calc(100% - 51px);
 }
+.list-group-item{
+    cursor: pointer;
+    outline: none;
+}

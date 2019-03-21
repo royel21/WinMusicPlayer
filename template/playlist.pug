@@ -1,0 +1,7 @@
+#play-list.list-container
+    ul.list-group-flush
+        for aud in files
+            li.list-group-item(id=aud.Id tabindex="0")
+                span#aud-name= aud.Name
+
+    

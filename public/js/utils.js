@@ -93,6 +93,10 @@ Array.prototype.removeBy = function (obj, by) {
     }
 }
 
+Array.prototype.randomFile = function () {
+    return this[Math.floor(Math.random() * this.length)]
+}
+
 Object.defineProperty(Array.prototype, "last", {
     get: function () {
         return this[this.length - 1];

@@ -7,7 +7,6 @@
     const path = require('path');
     const app = require('electron').remote.app
     const WinDrive = require('win-explorer');
-    console.log()
     const db = require(path.join(path.dirname(__dirname), './models'));
     const { NormalizeName } = require(path.join(path.dirname(__dirname), './utils/StringUtil'));
 
@@ -24,24 +23,47 @@
         return value && JSON.parse(value);
     }
 
-    ipc.on('remove-files', function (event, data, fromWindowId) {
+    ipc.on('remove-dup', function (event, dir, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId)
-        fs.removeSync(data.dir);
-        fromWindow.webContents.send('files-removed', data.index);
-        fromWindow.webContents.send('finish-proc');
-        window.close();
+
+        var tempFiles = [];
+        fileFilter.push('wma');
+
+        const removeDuplicate = async (folder, fis) => {
+            var fis = fis.filter((f) => {
+                return f.isDirectory || fileFilter.includes(f.extension.toLocaleLowerCase()) && !f.isHidden
+            });
+
+            for (var f of fis) {
+                if (f.isDirectory) {
+                    await removeDuplicate(f.FileName, f.Files);
+                } else {
+                    let found = tempFiles.find(a=> a === f.FileName);
+                    if (found) {
+                        fromWindow.webContents.send('error', "Dup: " + f.FileName);
+                        fs.removeSync(path.join(folder, f.FileName));
+                    } else {
+                        tempFiles.push(f.FileName);
+                    }
+                }
+            }
+        }
+        let files = WinDrive.ListFilesRO(dir);
+        fromWindow.webContents.send('error', files);
+        removeDuplicate(dir, files).then(() => {
+            window.close();
+        });
     });
 
     var timer = 0;
     ipc.on('scan-dirs', function (event, data, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId);
         var tempFiles = [];
-        
+
         let total = 0;
         scanOneDir = async (dir) => {
             var fis = WinDrive.ListFilesRO(dir);
             await PopulateDB(dir, fis);
-            console.log(tempFiles.length)
             if (tempFiles.length > 0) {
                 try {
                     await db.audiofile.bulkCreate(tempFiles);
@@ -50,7 +72,6 @@
                     fromWindow.webContents.send('error', err);
                 }
             }
-            console.log(total)
             tempFiles = [];
         }
 
@@ -63,6 +84,7 @@
                 }
             }
             fromWindow.webContents.send('error', "Scan Done: " + (new Date() - timer));
+            fromWindow.webContents.send('finish', true);
             window.close();
         }
         PopulateDB = async (folder, files, id) => {
@@ -70,8 +92,8 @@
                 return f.isDirectory || fileFilter.includes(f.extension.toLocaleLowerCase()) &&
                     !f.isHidden
             });
-            
-            if(fis.length === 0) return;
+
+            if (fis.length === 0) return;
 
             var f1 = await db.directory.findOrCreate({
                 where: {
@@ -95,21 +117,20 @@
                                 Name: f.FileName
                             }
                         });
-                        
+
                         if (!file && !found) {
                             tempFiles.push({
                                 Name: f.FileName,
                                 NameNormalize: NormalizeName(f.FileName),
                                 DirectoryId: f1[0].Id
                             });
-                        }else{
-                           if(found) fromWindow.webContents.send('error', "Duplicate: "+ found.Name);
+                        } else {
+                            if (found) fromWindow.webContents.send('error', "Duplicate: " + found.Name);
                         }
                     } else {
                         await PopulateDB(f.FileName, f.Files, f1[0].Id);
                     }
                 } catch (error) {
-                    console.log(error);
                     fromWindow.webContents.send('error', f1[0].Name);
                     fromWindow.webContents.send('error', error);
                 }

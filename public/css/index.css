@@ -35,26 +35,13 @@ body,
     border-radius: 0 0 .25rem .25rem;
 }
 
-#title-n{
-    position: relative;
-    flex-grow: 1;
-    flex-shrink: 1;
-    align-content: center;
-    padding: 3px 3px 3px 10px;
-    overflow: hidden;
-}
-
-.title{
-    line-height: 1;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    margin-bottom: 0;
-}
-
 .nav-item{
     position: relative;
     z-index: 1;
+}
+
+.nav-item:first-child{
+    margin-left: 10px
 }
 
 #file-name{
@@ -113,13 +100,10 @@ body,
     background-color: red;
 }
 .content{
-    /* display: flex; */
-    /* flex-direction: column; */
     align-items: center;
     position: relative;
     min-height: 100%;
     height: 100%;
-    /* overflow-y: auto; */
     padding: 0px;
 }
 
@@ -128,170 +112,12 @@ body,
     min-height: 100%;
 }
 
-.hidden {
-    display: none;
-}
-
-
-.modal {
-    display: none;
-    position: fixed;
-    width: 350px;
-    height: 300px;
-    min-height: 300px;
-    min-width: 350px;
-    z-index: 15;
-    font-weight: bold;
-    color: white;
-    top: auto;
-    right: auto;
-    border: 1px solid;
-}
-
-#modal-search{
-    display: none;
-    position: fixed;
-    width: 250px;
-    min-height: 10px;
-    min-width: 250px;
-    height: 40px;
-    z-index: 12;
-    bottom: 45px;
-    left: calc(100%/2 - 125px);
-}
-
-#modal-search #search-icon
-{
-    position: absolute;
-    top: 10px;
-    left: 8px;
-    color: grey;
-    z-index: 10;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-#modal-search #modal-search-box
-{
-    padding: .375rem .25rem;
-    pointer-events: all
-}
-
-#modal-search .input-group span{
-    font-size: 1.6rem;
-    margin: 0 8px;
-}
-#modal-body{
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-#modal-footer{
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    padding: 0.35rem;
-    font-weight: bold;
-}
-
-#drag-config
-{
-    cursor: pointer;
-    padding: 0.5rem;
-    font-weight: bold;
-}
-
-.loadding {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    left: 0;
-    top: 100px;
-    right: 0;
-    bottom: 100px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.2);
-}
-
- /**************** Loading Animation***********************/
-.loader,
-.loader:after {
-    border-radius: 50%;
-    width: 250px;
-    height: 250px;
-}
-.loader {          
-    position: absolute;  
-    margin: auto;
-    border-top: 1.1em solid rgba(255, 255, 255, 0.2);
-    border-right: 1.1em solid #ffffff;
-    border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
-    border-left: 1.1em solid #ffffff;
-    transform: translateZ(0);
-    animation: load8 1.1s infinite linear;
-}
-@keyframes load8 {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
-#loadingDiv {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    position:fixed;
-    top:50px;
-    left:0;
-    right: 0;
-    bottom: 50px;
-    overflow: hidden;
-    z-index: 9999;
-}
-#loading-msg, #loading-msg:after{
-    margin: auto;
-    color: white;
-    content: ".";
-    font-size: 2rem;
-}
-
-#loading-msg:after{
-    animation: load-msg 1.5s infinite linear;
-}
-@keyframes load-msg {
-    0% {
-        content: ".";
-    }
-    25%{
-        content: "..";
-    }
-    50%{
-        content: "...";
-    }
-    75%{
-        content: "....";
-    }
-    95%{
-        content: ".....";
-    }
-}
-
  /*************************Scrollbar Style********************************/
- ::-webkit-scrollbar {
-    width: 25px;
-}
 
 ::-webkit-scrollbar-thumb {
     background-color: rgba(0, 123, 255, .95);
     box-shadow: inset 0 0 6px rgba(15, 1, 228, 0.9);
+    border-radius: 0.25rem;
 }
 /************************* End ********************************/
 
@@ -368,22 +194,4 @@ span i.far:active{
     cursor: pointer;
     border: 1px solid #000000; 
     box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-}
-
-@media all and (min-width: 700px) {
-    .loadding .fa-spinner {
-        font-size: 15em;
-    }
-}
-
-@media all and (min-width: 900px) {
-    .loadding .fa-spinner {
-        font-size: 20em;
-    }
-}
-
-@media all and (min-width: 1200px) {
-    .loadding .fa-spinner {
-        font-size: 25em;
-    }
 }

@@ -13,12 +13,12 @@ html
             .nav.nav-tabs
                 .nav-item
                     input#tab-playing(type="radio" name="tabs" checked)
-                    label.nav-link(for="tab-playing") Player
+                    label.nav-link(for="tab-playing") Play List
                 .nav-item
-                    input#tab-list(type="radio" name="tabs" checked)
+                    input#tab-list(type="radio" name="tabs")
                     label.nav-link(for="tab-list") Play List
                 .nav-item
-                    input#tab-all(type="radio" name="tabs" checked)
+                    input#tab-all(type="radio" name="tabs")
                     label.nav-link(for="tab-all")
                         i.fas.fa-music
                 .nav-item
@@ -42,6 +42,37 @@ html
                     span.btn-sys-close.popup-msg(data-title="Close")
                         i.fas.fa-window-close
             #container.card
+
+            #a-player
+                audio#player(autoplay=true)
+                span#rewind
+                    label.fa(for="rewind-all")
+                        input#rewind-all(type="checkbox")
+                        svg(version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32")
+                            path(d="M4 10h20v6l8-8-8-8v6h-24v12h4zM28 22h-20v-6l-8 8 8 8v-6h24v-12h-4z")
+                span#random
+                    label.fa(for="random-audio")
+                        input#random-audio(type="checkbox")
+                        svg(version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32")
+                            path(d="M24 22h-3.172l-5-5 5-5h3.172v5l7-7-7-7v5h-4c-0.53 0-1.039 0.211-1.414 0.586l-5.586 5.586-5.586-5.586c-0.375-0.375-0.884-0.586-1.414-0.586h-6v4h5.172l5 5-5 5h-5.172v4h6c0.53 0 1.039-0.211 1.414-0.586l5.586-5.586 5.586 5.586c0.375 0.375 0.884 0.586 1.414 0.586h4v5l7-7-7-7v5z")
+                        
+                span#v-prev
+                    i.far.fa-arrow-alt-circle-left.popup-msg(data-title="Anterior")
+                </span>
+                span#v-play-pause
+                    label(for="v-play")
+                        input#v-play(type="checkbox")
+                        i.far.fa-play-circle.popup-msg(data-title="Pausar")
+                span#v-next
+                    i.far.fa-arrow-alt-circle-right.popup-msg(data-title="Proximo")
+                #slider-container
+                span#v-total-time 00:00/00:00
+                span.v-vol
+                    input#vol-slider.range.popup-msg(data-title="Volumen" type="range"
+                        min="0" step="0.01" value="0.5" max="1")
+                    label(for="v-mute")
+                        input#v-mute.vol-ctrl(type="checkbox")
+                        i.fas.popup-msg(id="vol-icon" data-title="Silenciar")
 
         script.
             if( typeof module === 'object'){

@@ -55,3 +55,12 @@ label[for=v-mute]{
 .v-controls .v-vol *{
     cursor: pointer;
 }
+
+#rewind-all + svg,
+#random-audio + svg{
+    fill: grey;
+}
+#rewind-all:checked + svg,
+#random-audio:checked + svg{
+    fill: black;
+}
