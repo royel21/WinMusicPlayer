@@ -1,7 +1,30 @@
-#play-list.list-container
-    ul.list-group-flush
-        for aud in files
-            li.list-group-item(id=aud.Id tabindex="0")
-                span#aud-name= aud.Name
-
-    
+#items-container.card.text-dark.row
+    .col-6
+        .list-titles
+            .title
+                span= listA.count+" - "+title1
+        include ./controls
+        +search(buttonTest)
+        #list-a.list-container
+            ul.list-group-flush
+                for item in listA.rows
+                    li.list-group-item(id=item.Id tabindex="0")
+                        span#item-name= item.Name
+    .col-6
+        .list-titles
+            #sub-content.nav.nav-tabs
+                .nav-item
+                    input#tab-folder-content(type="radio" name="tabs" checked)
+                    label.nav-link(for="tab-folder-content") Lista de videos
+                .nav-item
+                    input#tab-audio-all(type="radio" name="tabs")
+                    label.nav-link(for="tab-audio-all") Todos los Videos
+                span#total-videos.badge.badge-primary= listB.count
+        include ./controls
+        +search()
+        #list-b.list-container
+            ul.list-group-flush
+                for item in listB.rows
+                    li.list-group-item(id=item.Id tabindex="0")
+                        span#item-name= item.Name
+                

@@ -38,7 +38,7 @@
                 if (f.isDirectory) {
                     await removeDuplicate(f.FileName, f.Files);
                 } else {
-                    let found = tempFiles.find(a=> a === f.FileName);
+                    let found = tempFiles.find(a => a === f.FileName);
                     if (found) {
                         fromWindow.webContents.send('error', "Dup: " + f.FileName);
                         fs.removeSync(path.join(folder, f.FileName));
@@ -64,15 +64,6 @@
         scanOneDir = async (dir) => {
             var fis = WinDrive.ListFilesRO(dir);
             await PopulateDB(dir, fis);
-            if (tempFiles.length > 0) {
-                try {
-                    await db.audiofile.bulkCreate(tempFiles);
-                } catch (err) {
-                    console.log(err)
-                    fromWindow.webContents.send('error', err);
-                }
-            }
-            tempFiles = [];
         }
 
         scanDirs = async () => {
@@ -87,44 +78,47 @@
             fromWindow.webContents.send('finish', true);
             window.close();
         }
+
         PopulateDB = async (folder, files, id) => {
-            var fis = files.filter((f) => {
+            let fis = files.filter((f) => {
                 return f.isDirectory || fileFilter.includes(f.extension.toLocaleLowerCase()) &&
                     !f.isHidden
             });
 
             if (fis.length === 0) return;
-
-            var f1 = await db.directory.findOrCreate({
-                where: {
-                    Path: folder,
-                    Name: path.basename(folder)
-                }
-            });
-
-            if (!f1[0].DirectoryId) {
-                f1[0].update({
-                    DirectoryId: id
+            let f1 = [{ Id: null }];
+            if (fis.filter((f) => !f.isDirectory && fileFilter.includes(f.extension.toLocaleLowerCase())).length > 0) {
+                
+                f1 = await db.directory.findOrCreate({
+                    where: {
+                        Path: folder,
+                        Name: path.basename(folder)
+                    }
                 });
             }
-            for (var f of fis) {
-                var file = undefined;
+
+            var createfiles = [];
+
+            for (let f of fis) {
+                let file;
                 try {
                     if (!f.isDirectory) {
                         total++;
                         let found = tempFiles.find(v => v.Name === f.FileName);
-                        file = await db.audiofile.findOne({
+                        file = await db.file.findOne({
                             where: {
                                 Name: f.FileName
                             }
                         });
 
                         if (!file && !found) {
-                            tempFiles.push({
+                            let newFile = {
                                 Name: f.FileName,
                                 NameNormalize: NormalizeName(f.FileName),
                                 DirectoryId: f1[0].Id
-                            });
+                            }
+                            tempFiles.push(newFile);
+                            createfiles.push(newFile);
                         } else {
                             if (found) fromWindow.webContents.send('error', "Duplicate: " + found.Name);
                         }
@@ -134,8 +128,11 @@
                 } catch (error) {
                     fromWindow.webContents.send('error', f1[0].Name);
                     fromWindow.webContents.send('error', error);
+                    // console.log(error)
                 }
             }
+            if (createfiles.length > 0) await db.file.bulkCreate(createfiles);
+            createfiles = [];
         }
 
         scanDirs();

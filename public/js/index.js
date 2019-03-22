@@ -53,7 +53,7 @@ const loadView = (id) => {
     let script = "./public/js/";
     switch (id) {
         case "tab-playing": {
-            db.audiofile.findAll({
+            db.file.findAll({
                 order: ['NameNormalize'],
                 include: { model: db.directory }
             }).then(files => {
@@ -71,14 +71,22 @@ const loadView = (id) => {
                 if (btnShuffler.checked) {
                     config.playList.shuffle();
                 }
-                $container.empty().append(renderer('playlist', { files }));
-                loadScript(script + "playlist.js");
+                $container.empty().append(renderer('playing', { files }));
+                loadScript(script + "playing.js");
             });
             break;
         }
         case "tab-list": {
-            $container.empty();
-            loadScript(script + "list.js");
+           db.directory.findAndCountAll({ include: { model: db.file } }).then(listA => {
+                let listB = { count: 0, rows: [] };
+                if (listA.rows[0]) {
+                    listB.rows = listA.rows[0].Files
+                }
+                $container.empty().append(renderer('playlist', { title1: "List A", listA, title2: "listB", listB }));
+                $('#list-a li:first-child').addClass('active');
+                $('#list-b li:first-child').addClass('active');
+                loadScript(script + "playlist.js");
+            });
             break;
         }
         case "tab-all": {
@@ -87,12 +95,12 @@ const loadView = (id) => {
             break;
         }
         case "tab-folders": {
-            db.directory.findAndCountAll({include:{model: db.audiofile }}).then(listA=>{
-                let listB = {count: 0, rows: []};
-                if(listA.rows[0]){
-                    listB.rows = listA.rows[0].AudioFiles
+            db.directory.findAndCountAll({ include: { model: db.file } }).then(listA => {
+                let listB = { count: 0, rows: [] };
+                if (listA.rows[0]) {
+                    listB.rows = listA.rows[0].Files
                 }
-                $container.empty().append(renderer('items_home', { title1: "List A", listA, title2: "listB", listB }));
+                $container.empty().append(renderer('folders', { title1: "List A", listA, title2: "listB", listB }));
                 $('#list-a li:first-child').addClass('active');
                 $('#list-b li:first-child').addClass('active');
                 loadScript(script + "folders.js");
@@ -223,7 +231,7 @@ btnShuffler.onchange = (e) => {
     if (btnShuffler.checked) {
         config.playList.shuffle();
     } else {
-        db.audiofile.findAll({
+        db.file.findAll({
             order: ['NameNormalize'],
             include: { model: db.directory }
         }).then(files => {
@@ -256,14 +264,14 @@ $(() => {
 /****************list share code****************************/
 
 selectListRow = ($el) => {
-    if($el[0]){
+    if ($el[0]) {
         $el.closest('.list-container').find('li').removeClass('active');
         $el.addClass('active');
         $el.focus();
     }
 }
 
-$('#container').on('click', '.list-container li', (e)=> selectListRow($(e.target.closest('li'))) );
+$('#container').on('click', '.list-container li', (e) => selectListRow($(e.target.closest('li'))));
 
 $('#container').on('keydown', 'ul li', (e) => {
     let $item = $(e.target.closest('ul')).find('.active');
@@ -288,11 +296,11 @@ $('#container').on('keydown', 'ul li', (e) => {
 });
 
 /********** Search share code ******************/
-$('#container').on('click' ,'.clear-search', (e)=>{
-        e.target.closest('span').previousSibling.value = "";
+$('#container').on('click', '.clear-search', (e) => {
+    e.target.closest('span').previousSibling.value = "";
 });
 
-$('#container').on('submit' ,'#search-form', (e)=>{
+$('#container').on('submit', '#search-form', (e) => {
     e.preventDefault();
     console.log($(e.target).find('input').val())
 });

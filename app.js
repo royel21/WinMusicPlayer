@@ -3,7 +3,7 @@ const {
     BrowserWindow,
     ipcMain
 } = require('electron');
-const {renderer} = require('./modules/renderer');
+const { renderer } = require('./modules/renderer');
 
 const os = require('os');
 const fs = require('fs-extra');

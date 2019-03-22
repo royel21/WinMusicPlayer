@@ -2,8 +2,8 @@ PopulateDB = async (folder, files) => {
     var fis = files.filter((f) => {
         return f.isDirectory || fileFilter.includes(f.extension.toLocaleLowerCase()) && !f.isHidden
     });
-    
-    
+
+
     for (var f of fis) {
         try {
             if (!f.isDirectory) {
@@ -14,7 +14,7 @@ PopulateDB = async (folder, files) => {
                         Name: f.FileName
                     }
                 });
-                
+
                 if (found) {
                     tempFiles.push(f.FileName);
                 }
@@ -22,7 +22,7 @@ PopulateDB = async (folder, files) => {
                 await PopulateDB(f.FileName);
             }
         } catch (error) {
-            
+
         }
     }
 }

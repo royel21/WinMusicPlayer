@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "C:\\vscode-workspace\\WinMusicPlayer\\music.db",
+            "dialect": "SQLite",
+            "name": "Musicdb"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}

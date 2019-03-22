@@ -1,7 +1,13 @@
 
-$('#sub-content input[type=radio]').change((e) => {
-    let id = e.target.id;
-    console.log(id);
+
+$('#list-a li').click((e) => {
+    let folderId = e.target.closest('li').id;
+   db.directory.findOne({ where: { Id: folderId } }).then(dir => {
+        dir.getFiles({ order: ['NameNormalize'] }).then(files => {
+            console.log()
+            $('#list-b').empty().append(renderer('file-list', { files }));
+            $('#right-panel .title span').text(files.length +' - Content');
+        });
+    });
 });
 
-console.log('loaded')

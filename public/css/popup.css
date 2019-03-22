@@ -1,0 +1,33 @@
+#popup {
+    display: none;
+    position: absolute;
+    min-width: 60px;
+    width: max-content;
+    max-width: 225px;
+    z-index: 1000;
+    color: white;
+    background-color: rgba(27, 14, 209, 0.904);
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    pointer-events: none;
+    word-wrap: break-word;
+    text-align: center;
+    pointer-events: none;
+}
+
+#popup:after {
+    content: " ";
+    position: absolute;
+    height: 12px;
+    width: 12px;
+    top: -6px;
+    right: calc(100% / 2 - 6px);
+    transform: rotate(45deg);
+    background-color: rgba(27, 14, 209, 0.904);
+}
+
+#popup.popup-top:after {
+    top: auto;
+    bottom: -6px
+}

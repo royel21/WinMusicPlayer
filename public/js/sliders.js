@@ -42,15 +42,15 @@ class SliderRange {
 
         this.$slider.find('.rc-track').on('mousemove', (ev) => {
             if (this.onPreview) {
-                var newPos = Math.floor(ev.pageX - this.getOffset())+13;
-                
+                var newPos = Math.floor(ev.pageX - this.getOffset()) + 13;
+
                 var current = Number(newPos.map(0, this.$slider.width(), this.min, this.max).toFixed(2));
                 var pos = newPos.map(0, this.$slider.width(), 0, 100).toFixed(0);
-                
+
                 this.$slider.find('.rc-preview').css({
                     left: `calc(${pos < 0 ? 0 : pos > 100 ? 100 : pos}% - 30px)`
                 });
-               
+
                 this.onPreview(this.validateValue(current));
             }
         });
@@ -96,7 +96,7 @@ class SliderRange {
         this.updatePos();
     }
 
-    validateValue(val){
+    validateValue(val) {
         return val < this.min ? this.min : val > this.max ? this.max : val;
     }
 

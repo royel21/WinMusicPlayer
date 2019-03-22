@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 
-    const Video = sequelize.define('AudioFile', {
+    const File = sequelize.define('File', {
         Id: {
             type: DataTypes.STRING(10),
             primaryKey: true,
@@ -35,14 +35,5 @@ module.exports = (sequelize, DataTypes) => {
             }
         });
 
-    Video.findByName = (name) => {
-        return Video.findOne({
-            where: {
-                Name: name
-            },
-            include: {model: 'Directory'}
-        });
-    }
-
-    return Video;
+    return File;
 }

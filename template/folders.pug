@@ -2,24 +2,18 @@
     .col-6
         .list-titles
             .title
-                span= listA.count+" - "+title1
+                span= listA.rows.length+" - Folders"
         include ./controls
         +search(buttonTest)
         #list-a.list-container
             ul.list-group-flush
                 for item in listA.rows
-                    li.list-group-item(id=item.Id tabindex="0")
+                    li.list-group-item.popup-msg(id=item.Id data-title=item.Path tabindex="0")
                         span#item-name= item.Name
-    .col-6
+    .col-6#right-panel
         .list-titles
-            #sub-content.nav.nav-tabs
-                .nav-item
-                    input#tab-audio-content(type="radio" name="tabs" checked)
-                    label.nav-link(for="tab-audio-content") Lista de videos
-                .nav-item
-                    input#tab-audio-all(type="radio" name="tabs")
-                    label.nav-link(for="tab-audio-all") Todos los Videos
-                span#total-videos.badge.badge-primary= listB.count
+            .title
+                span= listB.rows.length+" - Content"
         include ./controls
         +search()
         #list-b.list-container
