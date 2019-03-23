@@ -2,9 +2,9 @@
     #content-a.col-6
         .list-titles
             .title
-                span= lists.length+" -  Play List"
+                span Play List
         include ./controls
-        +search(true)
+        +search(true, lists.length)
         #list-a.list-container
             ul.list-group-flush
                 for item in lists
@@ -23,7 +23,6 @@
                 .nav-item
                     input#tab-audio-all(type="radio" name="tabs")
                     label.nav-link(for="tab-audio-all") All Files
-                span#total-files.badge.badge-primary= files.length
         include ./controls
         +search(false, files.length)
         #list-b.list-container

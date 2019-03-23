@@ -2,20 +2,21 @@
     .col-6
         .list-titles
             .title
-                span= listA.rows.length+" - Folders"
+                span Folders
         include ./controls
-        +search(buttonTest)
+        +search(buttonTest, listA.rows.length)
         #list-a.list-container
             ul.list-group-flush
                 for item in listA.rows
                     li.list-group-item.popup-msg(id=item.Id data-title=item.Path tabindex="0")
+                        i.fas.fa-folder.mx-2
                         span#item-name= item.Name
     .col-6#right-panel
         .list-titles
             .title
-                span= listB.rows.length+" - Content"
+                span Content
         include ./controls
-        +search()
+        +search(false, listB.rows.length)
         #list-b.list-container
             ul.list-group-flush
                 for item in listB.rows

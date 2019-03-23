@@ -22,11 +22,13 @@
         if (value == "undefined") return [];
         return value && JSON.parse(value);
     }
+    var log;
+    
+    var tempFiles = [];
 
     ipc.on('remove-dup', function (event, dir, fromWindowId) {
-        let fromWindow = BrowserWindow.fromId(fromWindowId)
-
-        var tempFiles = [];
+        let fromWindow = BrowserWindow.fromId(fromWindowId);
+        log = fromWindow.webContents.send;
         fileFilter.push('wma');
 
         const removeDuplicate = async (folder, fis) => {
@@ -40,7 +42,7 @@
                 } else {
                     let found = tempFiles.find(a => a === f.FileName);
                     if (found) {
-                        fromWindow.webContents.send('error', "Dup: " + f.FileName);
+                        log('error', "Dup: " + f.FileName);
                         fs.removeSync(path.join(folder, f.FileName));
                     } else {
                         tempFiles.push(f.FileName);
@@ -49,92 +51,110 @@
             }
         }
         let files = WinDrive.ListFilesRO(dir);
-        fromWindow.webContents.send('error', files);
+        log('error', files);
         removeDuplicate(dir, files).then(() => {
             window.close();
         });
     });
 
     var timer = 0;
+
+    let total = 0;
+    const scanOneDir = async (dir) => {
+        var fis = WinDrive.ListFilesRO(dir);
+        await PopulateDB(dir, fis);
+    }
+
+    const PopulateDB = async (folder, files, id) => {
+        let fis = files.filter((f) => {
+            return f.isDirectory || fileFilter.includes(f.extension.toLocaleLowerCase()) &&
+                !f.isHidden
+        });
+
+        if (fis.length === 0) return;
+        let f1 = [{ Id: null }];
+        if (fis.filter((f) => !f.isDirectory && fileFilter.includes(f.extension.toLocaleLowerCase())).length > 0) {
+
+            f1 = await db.folder.findOrCreate({
+                where: {
+                    Path: folder,
+                    Name: path.basename(folder)
+                }
+            });
+        }
+
+        var createfiles = [];
+
+        for (let f of fis) {
+            let file;
+            try {
+                if (!f.isDirectory) {
+                    total++;
+                    let found = tempFiles.find(v => v.Name === f.FileName);
+                    file = await db.file.findOne({
+                        where: {
+                            Name: f.FileName
+                        }
+                    });
+
+                    if (!file && !found) {
+                        let newFile = {
+                            Name: f.FileName,
+                            NameNormalize: NormalizeName(f.FileName),
+                            FolderId: f1[0].Id
+                        }
+                        tempFiles.push(newFile);
+                        createfiles.push(newFile);
+                    } else {
+                        if (found) log('error', "Duplicate: " + found.Name);
+                    }
+                } else {
+                    await PopulateDB(f.FileName, f.Files, f1[0].Id);
+                }
+            } catch (error) {
+                log('error', f1[0].Name);
+                log('error', error);
+                // console.log(error)
+            }
+        }
+        if (createfiles.length > 0) await db.file.bulkCreate(createfiles);
+        createfiles = [];
+    }
+    
+    ipc.on('scan-or-rescan', function (event, data, fromWindowId) {
+        let fromWindow = BrowserWindow.fromId(fromWindowId);
+        log = fromWindow.webContents.send;
+        
+        scan = async () => {
+            timer = new Date();
+            if(data.reScan){
+                await db.directory.destroy({where:{Id: data.id}});
+            }
+            let dir = await db.directory.findOrCreate({where:{Id: data.id}});
+            scanOneDir(dir[0].Path);
+            log('error', "Scan Done: " + (new Date() - timer));
+            log('reload', true);
+            //window.close();
+        }
+
+        scan();
+    });
     ipc.on('scan-dirs', function (event, data, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId);
-        var tempFiles = [];
-
-        let total = 0;
-        scanOneDir = async (dir) => {
-            var fis = WinDrive.ListFilesRO(dir);
-            await PopulateDB(dir, fis);
-        }
+        log = fromWindow.webContents.send;
 
         scanDirs = async () => {
             timer = new Date();
-            let dirs = localStorage.getObject('directories');
+            let dirs = await db.directory.findAll();
             if (dirs) {
                 for (var f of dirs) {
-                    await scanOneDir(f.path);
+                    await scanOneDir(f.Path);
                 }
             }
-            fromWindow.webContents.send('error', "Scan Done: " + (new Date() - timer));
-            fromWindow.webContents.send('reload', true);
+            log('error', "Scan Done: " + (new Date() - timer));
+            log('reload', true);
             window.close();
         }
-
-        PopulateDB = async (folder, files, id) => {
-            let fis = files.filter((f) => {
-                return f.isDirectory || fileFilter.includes(f.extension.toLocaleLowerCase()) &&
-                    !f.isHidden
-            });
-
-            if (fis.length === 0) return;
-            let f1 = [{ Id: null }];
-            if (fis.filter((f) => !f.isDirectory && fileFilter.includes(f.extension.toLocaleLowerCase())).length > 0) {
-                
-                f1 = await db.directory.findOrCreate({
-                    where: {
-                        Path: folder,
-                        Name: path.basename(folder)
-                    }
-                });
-            }
-
-            var createfiles = [];
-
-            for (let f of fis) {
-                let file;
-                try {
-                    if (!f.isDirectory) {
-                        total++;
-                        let found = tempFiles.find(v => v.Name === f.FileName);
-                        file = await db.file.findOne({
-                            where: {
-                                Name: f.FileName
-                            }
-                        });
-
-                        if (!file && !found) {
-                            let newFile = {
-                                Name: f.FileName,
-                                NameNormalize: NormalizeName(f.FileName),
-                                DirectoryId: f1[0].Id
-                            }
-                            tempFiles.push(newFile);
-                            createfiles.push(newFile);
-                        } else {
-                            if (found) fromWindow.webContents.send('error', "Duplicate: " + found.Name);
-                        }
-                    } else {
-                        await PopulateDB(f.FileName, f.Files, f1[0].Id);
-                    }
-                } catch (error) {
-                    fromWindow.webContents.send('error', f1[0].Name);
-                    fromWindow.webContents.send('error', error);
-                    // console.log(error)
-                }
-            }
-            if (createfiles.length > 0) await db.file.bulkCreate(createfiles);
-            createfiles = [];
-        }
-
         scanDirs();
     });
 

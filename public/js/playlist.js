@@ -11,14 +11,17 @@ listConfig = () => {
         }
 
         getFileList(condition).then(files => {
-            $('#list-b').empty().append(renderer('file-list', { alls: !id.includes('content'), playlist: true, files }));
+            $('#list-b').empty().append(renderer('file-list', { add: !id.includes('content'), files }));
             $('#total-files').text($('#content-b li').length);
         });
     }
 
     $('#sub-content input[type=radio]').change((e) => loadFiles());
 
-    $('#content-b').on('submit', (e) => loadFiles());
+    $('#content-b').on('submit', (e) => {
+        e.preventDefault();
+        loadFiles();
+    });
 
     $('#content-b').on('dblclick', '#list-b li', (e) => {
         let id = e.target.closest('li').id;
@@ -27,7 +30,7 @@ listConfig = () => {
             where: { Id: getSelectedId() },
             include: {
                 model: db.file,
-                include: { model: db.directory }
+                include: { model: db.folder }
             }
 
         }).then(list => {

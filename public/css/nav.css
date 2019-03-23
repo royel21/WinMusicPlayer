@@ -26,6 +26,7 @@
     color: white;
 }
 
+
 #nav-menu .nav-item label{
     display: inline-block;
     margin: 0;
@@ -46,10 +47,10 @@
 
 #nav-menu .nav-item label .fa-folder .fa-music{
     position: absolute;
-    top: 11px;
+    top: 12px;
     left: 7px;
     color: white;
-    font-size: 15px;
+    font-size: 13px;
 }
 #nav-menu .nav-item input[type=radio]:checked + label .fa-folder .fa-music{
     color: black;

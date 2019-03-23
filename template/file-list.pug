@@ -1,11 +1,11 @@
 ul.list-group-flush
     for item in files
         li.list-group-item(id=item.Id tabindex="0")
-            if alls
+            if add
                 span.add-to-list
                     i.fas.fa-plus-circle
             else
-                if playlist
+                if edit
                     span.show-form                   
                         i.ml-1.fas.fa-edit
                 span.remove-from-list.text-danger

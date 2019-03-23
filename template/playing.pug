@@ -1,5 +1,10 @@
-#play-list.list-container
-    ul.list-group-flush
-        for aud in files
-            li.list-group-item(id=aud.Id tabindex="0")
-                span#aud-name= aud.Name
+#items-container
+    include ./controls
+    +search(false, files.length)
+    #play-list.list-container
+        ul.list-group-flush
+            for item in files
+                li.list-group-item(id=item.Id tabindex="0")
+                    span.remove
+                        i.mx-1.text-danger.fas.fa-trash-alt
+                    span#item-name= item.Name

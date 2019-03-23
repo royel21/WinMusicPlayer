@@ -13,7 +13,6 @@ var config = {
     shuffle: false,
     rewind: false,
     playList: [],
-    directories: [{ id: getId(), path: path.join(os.homedir(), 'Music') }],
     currentFile: { Id: 0, Name: "", Path: "" }
 }
 
@@ -71,7 +70,7 @@ const loadPlayList = async (files) => {
         return {
             Id: f.Id,
             Name: f.Name,
-            Path: f.Directory.Path
+            Path: f.Folder.Path
         }
     });
     if (btnShuffler.checked) {
@@ -86,7 +85,9 @@ const loadScript = (script) => {
     $('#pagescript').replaceWith(loadedScript);
 }
 
-const loadView = (id) => {
+var myList;
+
+const loadView = async (id) => {
     delete listConfig;
     delete foldersConfig;
     delete playingConfig;
@@ -104,38 +105,46 @@ const loadView = (id) => {
             break;
         }
         case "tab-list": {
-            db.list.findAll().then(lists => {
-                let files = [];
-                if (lists.length > 0) {
-                    files = getFileList({ val: "", Id: lists[0].Id, not: '' });
-                }
-                $container.empty().append(renderer('playlist', { lists, files }));
-                $('#list-a li:first-child').addClass('active');
-                $('#list-b li:first-child').addClass('active');
-                loadScript(script + "playlist.js");
-            });
+            let lists = await db.list.findAll({order: ['Name']});
+
+            let files = [];
+
+            if (lists.length > 0) {
+                files = await getFileList({ val: "", Id: lists[0].Id, not: '' });
+            }
+            $container.empty().append(renderer('playlist', { lists, files }));
+            $('#list-a li:first-child').addClass('active');
+            $('#list-b li:first-child').addClass('active');
+            loadScript(script + "playlist.js");
             break;
         }
         case "tab-all": {
-            db.file.findAll({ include: { model: db.directory } }).then(files => {
-                $container.empty().append(renderer('allfiles', { files }));
-                $('#list-a li:first-child').addClass('active');
-                loadScript(script += "allfiles.js");
-                loadPlayList(files);
+            let files = await db.file.findAll({
+                order: ['NameNormalize'],
+                include: { model: db.folder }
             });
+
+            $container.empty().append(renderer('allfiles', { files }));
+            $('#list-a li:first-child').addClass('active');
+            loadScript(script += "allfiles.js");
+            loadAllFilesConfig(files);
+
             break;
         }
         case "tab-folders": {
-            db.directory.findAndCountAll({ include: { model: db.file } }).then(listA => {
-                let listB = { count: 0, rows: [] };
-                if (listA.rows[0]) {
-                    listB.rows = listA.rows[0].Files
-                }
-                $container.empty().append(renderer('folders', { title1: "List A", listA, title2: "listB", listB }));
-                $('#list-a li:first-child').addClass('active');
-                $('#list-b li:first-child').addClass('active');
-                loadScript(script + "folders.js");
-            });
+
+            let listA = await db.folder.findAndCountAll({ order:['Name']});
+            let listB = { count: 0, rows: [] };
+
+            if (listA.rows[0]) {
+                listB.rows = await listA.rows[0].getFiles({ order: ['NameNormalize']});
+            }
+
+            $container.empty().append(renderer('folders', { listA, listB }));
+            $('#list-a li:first-child').addClass('active');
+            $('#list-b li:first-child').addClass('active');
+            loadScript(script + "folders.js");
+
             break;
         }
         case "tab-shedules": {
@@ -144,8 +153,10 @@ const loadView = (id) => {
             break;
         }
         case "tab-directories": {
-            $container.empty().append(renderer('directories'));
+            let dirs = await db.directory.findAll({order:['Name']});
+            $container.empty().append(renderer('directories', { directories: dirs}));
             loadScript(script + "directories.js");
+            loadDirectoryConfig();
             break;
         }
     }
@@ -153,7 +164,6 @@ const loadView = (id) => {
 
 $('#nav-menu input[type=radio]').change((e) => {
     let id = e.target.id;
-    console.log(id);
     loadView(id);
 });
 
@@ -252,6 +262,7 @@ const playAudio = async (file, prev) => {
     if (file) {
         player.src = path.join(file.Path, file.Name);
     }
+    console.trace('test');
 }
 
 $('#v-next').click(nextAudio);
@@ -264,13 +275,13 @@ btnShuffler.onchange = (e) => {
     } else {
         db.file.findAll({
             order: ['NameNormalize'],
-            include: { model: db.directory }
+            include: { model: db.folder }
         }).then(files => {
             config.playList = files.map(f => {
                 return {
                     Id: f.Id,
                     Name: f.Name,
-                    Path: f.Directory.Path
+                    Path: f.Folder.Path
                 }
             });
         })

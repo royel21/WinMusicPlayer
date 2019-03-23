@@ -1,6 +1,6 @@
 .list-container{
     overflow: auto;
-    height: calc(100% - 56px);
+    height: calc(100% - 52px);
 }
 
 .list-container::-webkit-scrollbar{
@@ -11,8 +11,12 @@
     padding: 0;
 }
 
+#badge-container{
+    
+}
+
 #play-list{
-     height: calc(100% - 51px);
+     height: calc(100% - 50px);
 }
 
 .list-group-item{
@@ -26,6 +30,13 @@
     height: calc(100% - 100px);
 }
 
+#list-a .fa-folder{
+    color: wheat;
+}
+
+#list-a .active .fa-folder:before{
+    content: "\f07c";
+}
 
 #container{
     flex-direction: column;
@@ -44,6 +55,7 @@
     margin: 0;
     flex-direction: row;
     height: calc(100% - 87px);
+    border-radius: .25rem;
 } 
 
 
@@ -82,6 +94,7 @@
     flex-grow: 1;
     align-self: center;
     font-size: 30px;
+    font-weight: bold;
 }
 
 
@@ -125,6 +138,7 @@
     white-space: nowrap;
     overflow: hidden;
     min-height: 40px;
+    font-weight: 500;
 }
 
 .list-group-item .v-name{
@@ -155,6 +169,11 @@
     margin: 0;
 }
 
+#search-form .search-input{
+    border-radius:0 .25rem .25rem 0;
+}
+
+#badge-container,
 #items-container .btn{
     align-self: center;
 }

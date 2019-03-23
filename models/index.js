@@ -19,7 +19,8 @@ db.file = require('./file')(sequelize, DataTypes);
 db.list = require('./list')(sequelize, DataTypes);
 // db.serie = require('./serie')(sequelize, DataTypes);
 // db.favorite = require('./favorites')(sequelize, DataTypes);
-db.directory = require('./directories')(sequelize, DataTypes);
+db.folder = require('./Folder')(sequelize, DataTypes);
+db.directory = require('./directory')(sequelize, DataTypes);
 // db.favoriteVideo = require('./favorite-video')(sequelize, DataTypes);
 db.filelist = require('./filelist')(sequelize, DataTypes);
 
@@ -31,9 +32,12 @@ db.file.belongsToMany(db.list, { through: { model: db.filelist } });
 // db.favorite.belongsToMany(db.video, { through: db.favoriteVideo, foreignKey: "FavoriteId" });
 // db.video.belongsToMany(db.favorite, { through: db.favoriteVideo, foreignKey: "VideoId" });
 
-db.directory.hasMany(db.file, { onDelete: 'cascade' });
-db.file.belongsTo(db.directory);
+db.folder.hasMany(db.file, { onDelete: 'cascade' });
+db.file.belongsTo(db.folder);
 
+
+db.directory.hasMany(db.folder, { onDelete: 'cascade' });
+db.folder.belongsTo(db.directory);
 // db.video.belongsTo(db.serie);
 
 // db.user.hasOne(db.favorite);
@@ -41,6 +45,12 @@ db.file.belongsTo(db.directory);
 
 db.init = async () => {
     await sequelize.sync();
+    await db.directory.findOrCreate({
+        where: {
+            Name: 'Music', 
+            Path: path.join(os.homedir(), 'Music')
+        }
+    });
 }
 
 module.exports = db;

@@ -4,7 +4,7 @@ $('#sub-content input[type=radio]').change((e) => {
     condition = { order: ['NameNormalize'] }
 
     if (id.includes('folder-content')) {
-        db.directory.findOne({ where: { Id: folderId } }).then(dir => {
+        db.folder.findOne({ where: { Id: folderId } }).then(dir => {
             dir.getFiles({ order: ['NameNormalize'] }).then(files => {
                 console.log()
                 $('#list-b').empty().append(renderer('file-list', { files }));
@@ -17,7 +17,7 @@ $('#sub-content input[type=radio]').change((e) => {
             where: {
                 [db.Op.not]: [{ DirectoryId: folderId }]
             },
-            include: { model: db.directory }
+            include: { model: db.folder }
         }).then(files => {
             console.log()
             $('#list-b').empty().append(renderer('file-list', { files }));

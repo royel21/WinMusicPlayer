@@ -3,12 +3,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const local = localStorage;
 
-compressFilter = ['zip', 'rar', 'cbr'];
-videoFilter = ['mp4', 'mkv', 'avi', 'webm', 'ogg'];
-imagesFilter = ['png', 'gif', 'jpg', 'jpeg', 'webp', 'bmp'];
-
 const BrowserWindow = app.BrowserWindow;
-
 const invisPath = `file://${path.join(__dirname, 'background/createthumb.html')}`;
 const windowID = mainWindow.id;
 
@@ -16,12 +11,12 @@ createBackgroundWin = (event, data) => {
     var e = event;
     var d = data;
     var win = new BrowserWindow({
-        width: 1,
-        height: 1,
-        show: false
-        // width: 1000,
-        // height: 1000,
-        // show: true
+        // width: 1,
+        // height: 1,
+        // show: false
+        width: 1000,
+        height: 1000,
+        show: true
     });
     win.loadURL(invisPath);
     win.webContents.on('did-finish-load', () => {
