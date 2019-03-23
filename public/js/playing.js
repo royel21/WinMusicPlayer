@@ -20,9 +20,9 @@ $('#play-list').on('keydown', 'li', (e) => {
     }
 });
 
-selectLast = () =>{
+selectLast = () => {
     let id = config.currentFile.Id;
-    if(!$('#' + id)[0]) id = $('li').attr('id');
+    if (!$('#' + id)[0]) id = $('li').attr('id');
     selectListRow($('#' + id));
 }
 

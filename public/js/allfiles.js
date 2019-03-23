@@ -1,35 +1,41 @@
-loadAllFilesConfig = () =>{
-    let loadFiles = () =>{
+loadAllFilesConfig = () => {
+    let loadFiles = (mapFiles) => {
         let filter = $('.search-input').val();
         db.file.findAll({
             where: {
-            Name: {
-                [db.Op.like]: "%" + filter + "%"
-            }}, include: {model: db.directory}
-            }).then(files=>{
-           $('#list-a').empty().append(renderer('file-list', {files}));
-        }).catch(err=>{
+                Name: {
+                    [db.Op.like]: "%" + filter + "%"
+                }
+            }, include: { model: db.directory }
+        }).then(files => {
+            if (mapFiles) {
+                loadPlayList(files);
+            }
+            $('#list-a').empty().append(renderer('file-list', { files }));
+        }).catch(err => {
             console.log(err);
         });
     }
-    
-    $('#list-a').dblclick((e)=>{
-            let id = e.target.closest('li').id;
-            playAudio(config.playList.find(f => f.Id === id));
+
+    $('#list-a').dblclick((e) => {
+        let id = e.target.closest('li').id;
+        playAudio(config.playList.find(f => f.Id === id));
+
+
     });
-    $('#search-form').submit((e)=>{
+    $('#search-form').submit((e) => {
         e.preventDefault();
         loadFiles();
     });
 
     $('#search-form').on('click', '.clear-search', (e) => {
-          e.target.closest('span').previousSibling.value = "";
-          loadFiles();
+        e.target.closest('span').previousSibling.value = "";
     });
 
-    $('#list-A li').dblclick((e)=>{
+    $('#list-A li').dblclick((e) => {
         let id = e.target.closest('li').id;
         playAudio(config.playList.find(f => f.Id === id));
+        loadFiles(true);
     });
 }
 loadAllFilesConfig();

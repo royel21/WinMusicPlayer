@@ -41,7 +41,7 @@ const nextAudio = (e) => {
     let index = getIndex(config.currentFile);
     if (++index < config.playList.length) {
         playAudio(config.playList[index]);
-    }else{
+    } else {
         playAudio(config.playList[0]);
     }
 }
@@ -50,13 +50,13 @@ const prevAudio = (e) => {
     let index = getIndex(config.currentFile);
     if (--index > -1 && index < config.playList.length) {
         playAudio(config.playList[index]);
-    }else{
-        playAudio(config.playList[config.playList.length-1]);
+    } else {
+        playAudio(config.playList[config.playList.length - 1]);
     }
 }
 
 ipcRenderer.on('reload', (event, msg) => {
-   let id = $('#nav-menu input[type=radio]:checked').id;
+    let id = $('#nav-menu input[type=radio]:checked').id;
     console.log('reload:', id);
     loadView(id);
 });
@@ -66,7 +66,7 @@ ipcRenderer.on('error', (event, msg) => {
     ipcRenderer.send('console-log', msg);
 });
 
-const loadPlayList = async (files) =>{
+const loadPlayList = async (files) => {
     config.playList = files.map(f => {
         return {
             Id: f.Id,
@@ -74,9 +74,9 @@ const loadPlayList = async (files) =>{
             Path: f.Directory.Path
         }
     });
-     if (btnShuffler.checked) {
+    if (btnShuffler.checked) {
         config.playList.shuffle();
-     }
+    }
 }
 
 const loadScript = (script) => {
@@ -99,15 +99,15 @@ const loadView = (id) => {
     let script = "./public/js/";
     switch (id) {
         case "tab-playing": {
-                $container.empty().append(renderer('playing', { files: config.playList }));
-                loadScript(script + "playing.js");
+            $container.empty().append(renderer('playing', { files: config.playList }));
+            loadScript(script + "playing.js");
             break;
         }
         case "tab-list": {
-           db.list.findAll().then(lists=> {
-                let files  = [];
+            db.list.findAll().then(lists => {
+                let files = [];
                 if (lists.length > 0) {
-                    files = getFileList({val:"", Id: lists[0].Id, not: ''});
+                    files = getFileList({ val: "", Id: lists[0].Id, not: '' });
                 }
                 $container.empty().append(renderer('playlist', { lists, files }));
                 $('#list-a li:first-child').addClass('active');
@@ -117,7 +117,7 @@ const loadView = (id) => {
             break;
         }
         case "tab-all": {
-            db.file.findAll({include: {model: db.directory}}).then(files=> {
+            db.file.findAll({ include: { model: db.directory } }).then(files => {
                 $container.empty().append(renderer('allfiles', { files }));
                 $('#list-a li:first-child').addClass('active');
                 loadScript(script += "allfiles.js");

@@ -17,11 +17,11 @@ $('#sub-content input[type=radio]').change((e) => {
             where: {
                 [db.Op.not]: [{ DirectoryId: folderId }]
             },
-            include: {model: db.directory}
-        }).then(files=>{
+            include: { model: db.directory }
+        }).then(files => {
             console.log()
-                $('#list-b').empty().append(renderer('file-list', { files }));
-                $('#total-videos').text(files.length);
+            $('#list-b').empty().append(renderer('file-list', { files }));
+            $('#total-videos').text(files.length);
         });
     }
 });

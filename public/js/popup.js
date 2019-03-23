@@ -16,24 +16,24 @@ popupShow = async (event) => {
         event.target : $(event.target).closest(".popup-msg")[0];
 
     if (element != undefined) {
-        
+
         var rect = element.getBoundingClientRect();
         var msg = element.dataset.title;
         $popup.css({
-                display: "block",
-                top: -3000,
-            }).text(msg == undefined ? element.textContent : msg);
+            display: "block",
+            top: -3000,
+        }).text(msg == undefined ? element.textContent : msg);
 
-            var top = rect.top + 8 + rect.height;
-            if (top + $popup.height() + 10 > window.innerHeight) {
-                top = rect.top - 22 - $popup.height()
-                $popup.addClass('popup-top');
-            }
+        var top = rect.top + 8 + rect.height;
+        if (top + $popup.height() + 10 > window.innerHeight) {
+            top = rect.top - 22 - $popup.height()
+            $popup.addClass('popup-top');
+        }
 
-            $popup.css({
-                top,
-                left: (rect.x + rect.width / 2) - ($popup.width() / 2) - 9
-            });
+        $popup.css({
+            top,
+            left: (rect.x + rect.width / 2) - ($popup.width() / 2) - 9
+        });
     }
 }
 
