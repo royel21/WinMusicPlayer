@@ -20,4 +20,10 @@ $('#play-list').on('keydown', 'li', (e) => {
     }
 });
 
-selectListRow($('#' + config.currentFile.Id));
+selectLast = () =>{
+    let id = config.currentFile.Id;
+    if(!$('#' + id)[0]) id = $('li').attr('id');
+    selectListRow($('#' + id));
+}
+
+selectLast();

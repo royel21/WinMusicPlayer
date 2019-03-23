@@ -1,0 +1,14 @@
+#modal-container
+    #modal.card.bg-dark.text-light
+        #modal-header.text-center
+            h3 Create Play List
+        #errors.text-danger.text-center
+        .input-group.my-3
+            .input-group-prepend
+                label.input-group-text(for="name") Name
+            input#name.form-control(required="" type="text" name="name" value=""+ (item ? item.Name : ""))
+        
+        .text-center.my-3
+            button.btn.btn-secondary.close-modal(type="button") Cancel
+            button#create-list.btn.btn-primary.ml-2 Create
+        

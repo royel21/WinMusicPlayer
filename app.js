@@ -66,6 +66,9 @@ function createWin() {
     win.openDevTools();
 }
 
+ipcMain.on('console-log', (event, msg) => {
+    console.log(msg);
+});
 
 ipcMain.on('close', (event, file) => {
     console.log(file);

@@ -1,4 +1,13 @@
 ul.list-group-flush
-        for item in files
-            li.list-group-item(id=item.Id tabindex="0")
-                span#item-name= item.Name
+    for item in files
+        li.list-group-item(id=item.Id tabindex="0")
+            if alls
+                span.add-to-list
+                    i.fas.fa-plus-circle
+            else
+                if playlist
+                    span.show-form                   
+                        i.ml-1.fas.fa-edit
+                span.remove-from-list.text-danger
+                    i.fas.fa-trash-alt
+            span#item-name= item.Name

@@ -6,6 +6,8 @@ const id3 = require('id3js');
 
 const btnShuffler = document.getElementById('random-audio');
 
+const getSelectedId = () => $('#list-a .active').attr('id');
+
 var config = {
     volume: 0.5,
     shuffle: false,
@@ -20,25 +22,62 @@ ipcRenderer.on('save-file', (e) => {
     ipcRenderer.send('close', "");
 });
 
+const getFileList = async (data) => {
+    return await db.sqlze.query(`Select Id, Name, NameNormalize 
+        from Files where Name LIKE ? and Id ${data.not} in(Select FileId 
+        from FileLists where ListId = ?) 
+        ORDER BY NameNormalize;`,
+        {
+            model: db.File,
+            mapToModel: true,
+            replacements: [data.val, data.Id],
+            type: db.sqlze.QueryTypes.SELECT
+        });
+}
+
 const getIndex = (file) => config.playList.findIndex(f => f.Id === file.Id);
 
 const nextAudio = (e) => {
     let index = getIndex(config.currentFile);
     if (++index < config.playList.length) {
         playAudio(config.playList[index]);
+    }else{
+        playAudio(config.playList[0]);
     }
 }
 
 const prevAudio = (e) => {
     let index = getIndex(config.currentFile);
     if (--index > -1 && index < config.playList.length) {
-        playAudio(config.playList[index], true);
+        playAudio(config.playList[index]);
+    }else{
+        playAudio(config.playList[config.playList.length-1]);
     }
 }
 
-ipcRenderer.on('error', (event, msg) => {
-    console.log(msg)
+ipcRenderer.on('reload', (event, msg) => {
+   let id = $('#nav-menu input[type=radio]:checked').id;
+    console.log('reload:', id);
+    loadView(id);
 });
+
+ipcRenderer.on('error', (event, msg) => {
+    console.log(msg);
+    ipcRenderer.send('console-log', msg);
+});
+
+const loadPlayList = async (files) =>{
+    config.playList = files.map(f => {
+        return {
+            Id: f.Id,
+            Name: f.Name,
+            Path: f.Directory.Path
+        }
+    });
+     if (btnShuffler.checked) {
+        config.playList.shuffle();
+     }
+}
 
 const loadScript = (script) => {
     var loadedScript = document.createElement("script");
@@ -48,41 +87,29 @@ const loadScript = (script) => {
 }
 
 const loadView = (id) => {
+    delete listConfig;
+    delete foldersConfig;
+    delete playingConfig;
+    delete taskConfig;
+    delete directoriesConfig;
+    delete loadAllFilesConfig;
+
     config.lastIds = [];
     let $container = $('#container');
     let script = "./public/js/";
     switch (id) {
         case "tab-playing": {
-            db.file.findAll({
-                order: ['NameNormalize'],
-                include: { model: db.directory }
-            }).then(files => {
-                if (files) {
-                    config.playList = files.map(f => {
-                        return {
-                            Id: f.Id,
-                            Name: f.Name,
-                            Path: f.Directory.Path
-                        }
-                    });
-                } else {
-                    files = [];
-                }
-                if (btnShuffler.checked) {
-                    config.playList.shuffle();
-                }
-                $container.empty().append(renderer('playing', { files }));
+                $container.empty().append(renderer('playing', { files: config.playList }));
                 loadScript(script + "playing.js");
-            });
             break;
         }
         case "tab-list": {
-           db.directory.findAndCountAll({ include: { model: db.file } }).then(listA => {
-                let listB = { count: 0, rows: [] };
-                if (listA.rows[0]) {
-                    listB.rows = listA.rows[0].Files
+           db.list.findAll().then(lists=> {
+                let files  = [];
+                if (lists.length > 0) {
+                    files = getFileList({val:"", Id: lists[0].Id, not: ''});
                 }
-                $container.empty().append(renderer('playlist', { title1: "List A", listA, title2: "listB", listB }));
+                $container.empty().append(renderer('playlist', { lists, files }));
                 $('#list-a li:first-child').addClass('active');
                 $('#list-b li:first-child').addClass('active');
                 loadScript(script + "playlist.js");
@@ -90,8 +117,12 @@ const loadView = (id) => {
             break;
         }
         case "tab-all": {
-            $container.empty();
-            loadScript(script += "allfile.js");
+            db.file.findAll({include: {model: db.directory}}).then(files=> {
+                $container.empty().append(renderer('allfiles', { files }));
+                $('#list-a li:first-child').addClass('active');
+                loadScript(script += "allfiles.js");
+                loadPlayList(files);
+            });
             break;
         }
         case "tab-folders": {
@@ -120,7 +151,7 @@ const loadView = (id) => {
     }
 }
 
-$('.nav-tabs input[type=radio]').change((e) => {
+$('#nav-menu input[type=radio]').change((e) => {
     let id = e.target.id;
     console.log(id);
     loadView(id);
@@ -293,14 +324,4 @@ $('#container').on('keydown', 'ul li', (e) => {
                 break;
             }
     }
-});
-
-/********** Search share code ******************/
-$('#container').on('click', '.clear-search', (e) => {
-    e.target.closest('span').previousSibling.value = "";
-});
-
-$('#container').on('submit', '#search-form', (e) => {
-    e.preventDefault();
-    console.log($(e.target).find('input').val())
 });

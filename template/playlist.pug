@@ -1,30 +1,36 @@
 #items-container.card.text-dark.row
-    .col-6
+    #content-a.col-6
         .list-titles
             .title
-                span= listA.count+" - "+title1
+                span= lists.length+" -  Play List"
         include ./controls
-        +search(buttonTest)
+        +search(true)
         #list-a.list-container
             ul.list-group-flush
-                for item in listA.rows
+                for item in lists
                     li.list-group-item(id=item.Id tabindex="0")
+                        span.show-form                   
+                            i.ml-1.fas.fa-edit
+                        span.remove
+                            i.mx-1.text-danger.fas.fa-trash-alt
                         span#item-name= item.Name
-    .col-6
+    #content-b.col-6
         .list-titles
             #sub-content.nav.nav-tabs
                 .nav-item
                     input#tab-folder-content(type="radio" name="tabs" checked)
-                    label.nav-link(for="tab-folder-content") Lista de videos
+                    label.nav-link(for="tab-folder-content") List Content
                 .nav-item
                     input#tab-audio-all(type="radio" name="tabs")
-                    label.nav-link(for="tab-audio-all") Todos los Videos
-                span#total-videos.badge.badge-primary= listB.count
+                    label.nav-link(for="tab-audio-all") All Files
+                span#total-files.badge.badge-primary= files.length
         include ./controls
-        +search()
+        +search(false, files.length)
         #list-b.list-container
             ul.list-group-flush
-                for item in listB.rows
+                for item in files
                     li.list-group-item(id=item.Id tabindex="0")
+                        span.v-remove.text-danger
+                            i.fas.fa-trash-alt
                         span#item-name= item.Name
                 

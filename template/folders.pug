@@ -20,5 +20,9 @@
             ul.list-group-flush
                 for item in listB.rows
                     li.list-group-item(id=item.Id tabindex="0")
+                        span.show-form                   
+                            i.ml-1.fas.fa-edit
+                        span.v-remove.text-danger
+                            i.fas.fa-trash-alt
                         span#item-name= item.Name
                 

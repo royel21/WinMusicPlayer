@@ -60,7 +60,7 @@
 .list-titles .nav-tabs{
     background-color: white;
 }
-
+#total-files,
 .list-titles #total-videos{
     position: absolute;
     top: 14px;

@@ -207,6 +207,7 @@ span i.far:active{
 
 .btn-search:active{
     font-size: .9rem;
+    outline: none;
 }
 
 #pager{
@@ -245,4 +246,31 @@ span i.far:active{
 
 .search-input:not(:placeholder-shown) + span .fa-times-circle{
     display: initial;
+}
+
+/************Modal css*********************/
+#modal-container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .55);
+    z-index: 9999;
+}
+
+#modal{
+    display: none;
+    height: fit-content;
+    min-width: 400px;
+    padding: 20px 15px;
+    border: 1px solid;
+}
+
+#modal-header{
+    padding: 10px 0;
 }

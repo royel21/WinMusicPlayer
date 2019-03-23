@@ -75,7 +75,7 @@
                 }
             }
             fromWindow.webContents.send('error', "Scan Done: " + (new Date() - timer));
-            fromWindow.webContents.send('finish', true);
+            fromWindow.webContents.send('reload', true);
             window.close();
         }
 
