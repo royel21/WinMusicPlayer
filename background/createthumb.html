@@ -25,6 +25,7 @@
     var log;
     
     var tempFiles = [];
+    var dirId;
 
     ipc.on('remove-dup', function (event, dir, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId);
@@ -78,7 +79,8 @@
             f1 = await db.folder.findOrCreate({
                 where: {
                     Path: folder,
-                    Name: path.basename(folder)
+                    Name: path.basename(folder),
+                    DirectoryId: dirId
                 }
             });
         }
@@ -124,35 +126,40 @@
     ipc.on('scan-or-rescan', function (event, data, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId);
         log = fromWindow.webContents.send;
-        
+            
+        dirId = data.id;
+
         scan = async () => {
             timer = new Date();
             if(data.reScan){
                 await db.directory.destroy({where:{Id: data.id}});
             }
-            let dir = await db.directory.findOrCreate({where:{Id: data.id}});
-            scanOneDir(dir[0].Path);
-            log('error', "Scan Done: " + (new Date() - timer));
-            log('reload', true);
-            //window.close();
+            let dir = await db.directory.findOne({where:{Id: data.id}});
+            scanOneDir(dir.Path);
+            await dir.update({Scanning: false});
+            log('scan', {done: true, Id: dir.Id, time: (new Date() - timer)});
+            // window.close();
         }
 
         scan();
     });
+
     ipc.on('scan-dirs', function (event, data, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId);
         log = fromWindow.webContents.send;
 
         scanDirs = async () => {
-            timer = new Date();
             let dirs = await db.directory.findAll();
             if (dirs) {
                 for (var f of dirs) {
+                    timer = new Date();
+                    dirId = f.Id;
                     await scanOneDir(f.Path);
+                    await f.update({Scanning: false});
+                    log('scan', {done: true, Id: f.Id, time: (new Date() - timer)});
                 }
             }
-            log('error', "Scan Done: " + (new Date() - timer));
-            log('reload', true);
+            
             window.close();
         }
         scanDirs();

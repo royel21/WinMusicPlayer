@@ -154,6 +154,18 @@
     border-radius: 0;
 }
 
+#items-container .list-group-item:last-child{
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+#items-container .list-group-item .fa-sync{
+    color: #007bff;
+}
+
+#items-container .active .fa-sync{
+    color: white;
+}
+
 .controls{
     position: relative;
     display: flex;
@@ -184,4 +196,10 @@
 
 #modal .file-form input{
     display: none;
+}
+
+#items-container .list-group-item .fa:active,
+#items-container .list-group-item .far:active,
+#items-container .list-group-item .fas:active{
+    transform: scale(1.1);    
 }

@@ -1,0 +1,49 @@
+mixin pagination(pages)
+    if pages.totalPages > 1 
+        div#pager
+            ul.pagination
+                li.page-item
+                    select#select-page.form-control
+                            -for(let i = 1; i < pages.totalPages+1; i++)
+                                option(value=""+i selected=(pages.currentPage == i ? true : false))= i
+                if pages.currentPage == 1
+                    li.page-item.disabled
+                        span.page-link
+                            i.fa.fa-angle-double-left
+                    li.page-item.disabled
+                        span.page-link
+                            i.fa.fa-angle-left
+                else
+                    li.page-item
+                        span.page-link(data-page=1)
+                            i.fa.fa-angle-double-left
+                    li.page-item
+                        span.page-link(data-page=pages.currentPage-1)
+                            i.fa.fa-angle-left
+                    
+                -for (let i = pages.currentPage - 2; i <= pages.currentPage - 1; i++)
+                    -if (i > 0)
+                        li.page-item
+                            span.page-link(data-page=i)= i
+                li.page-item.active
+                    span.page-link(data-page=pages.currentPage)= pages.currentPage
+
+                -for (let i = pages.currentPage + 1; i <= pages.currentPage + 2; i++)
+                    -if (i < parseInt(pages.totalPages)+1)
+                        li.page-item
+                            span.page-link(data-page=i)= i
+                
+                if pages.currentPage == pages.totalPages
+                    li.page-item.disabled
+                        span.page-link
+                            i.fa.fa-angle-right
+                    li.page-item.disabled
+                        span.page-link
+                            i.fa.fa-angle-double-right
+                else
+                    li.page-item
+                        span.page-link(data-page=parseInt(pages.currentPage)+1)
+                            i.fa.fa-angle-right
+                    li.page-item
+                        span.page-link(data-page=pages.totalPages)
+                            i.fa.fa-angle-double-right

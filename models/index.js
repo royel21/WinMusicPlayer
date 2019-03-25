@@ -51,6 +51,11 @@ db.init = async () => {
             Path: path.join(os.homedir(), 'Music')
         }
     });
+    await db.list.findOrCreate({
+        where: {
+            Name: 'Playing'
+        }
+    });
 }
 
 module.exports = db;

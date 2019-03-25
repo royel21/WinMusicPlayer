@@ -1,9 +1,9 @@
 #items-container
     include ./controls
-    +search(false, files.length)
+    +search(false, files.count, pages.search, pages)
     #all-files.list-container
         ul.list-group-flush
-            for item in files
+            for item in files.rows
                 li.list-group-item(id=item.Id tabindex="0")
                     span.show-form                   
                         i.ml-1.fas.fa-edit

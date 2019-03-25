@@ -1,4 +1,4 @@
-mixin search(buttonTest, total)
+mixin search(buttonTest, total, search, pages)
     form#search-form
         .controls
             if buttonTest
@@ -9,10 +9,12 @@ mixin search(buttonTest, total)
                     .input-group-prepend
                         button.btn-search.input-group-text(type="submit")
                             i.fa.fa-search
-                    input.search-input.form-control(type="text" name="search" value="" placeholder="Search")
+                    input.search-input.form-control(type="text" name="search" value=search placeholder="Search")
                     span.clear-search
                         i.fas.fa-times-circle
-            if total
-                #badge-container
-                    span#total-items.badge.badge-primary= total
+            if pages
+                include ./pagination
+                +pagination(pages)
+            #badge-container
+                span#total-items.badge.badge-primary= total
             

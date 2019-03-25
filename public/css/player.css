@@ -56,6 +56,14 @@ label[for=v-mute]{
     cursor: pointer;
 }
 
+#always-on-top + .far{
+    color: grey;
+}
+
+#always-on-top:checked + .far{
+    color: black;
+}
+
 #rewind-all + svg,
 #random-audio + svg{
     fill: grey;

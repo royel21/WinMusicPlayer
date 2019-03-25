@@ -47,6 +47,10 @@ html
 
             #a-player
                 audio#player(autoplay=true)
+                span#on-top
+                    label.popup-msg(for="always-on-top" data-title="On Top")
+                        input#always-on-top(type="checkbox")
+                        i.far.fa-window-restore
                 span#rewind
                     label.fa.popup-msg(for="rewind-all" data-title="Rewind")
                         input#rewind-all(type="checkbox")

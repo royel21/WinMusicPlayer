@@ -44,6 +44,7 @@ function createWin() {
         if (closeNow) {
             app.quit();
         } else {
+            win.hide();
             e.preventDefault();
             win.webContents.send('save-file', "");
             closeNow = true;
@@ -63,6 +64,7 @@ function createWin() {
             app.quit();
         }
     });
+    
     win.openDevTools();
 }
 

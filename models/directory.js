@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false
+    },
+    Scanning:{
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     }
   }, {
       timestamps: false,

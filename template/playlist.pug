@@ -8,6 +8,8 @@
         #list-a.list-container
             ul.list-group-flush
                 for item in lists
+                    if item.Name === 'Playing'
+                        -continue
                     li.list-group-item(id=item.Id tabindex="0")
                         span.show-form                   
                             i.ml-1.fas.fa-edit

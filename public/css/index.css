@@ -197,10 +197,6 @@ span i.far:active{
 }
 /******************************************************************/
 
-#pager{
-    align-self: center;
-}
-
 .btn-search{
     cursor: pointer;
 }
@@ -211,21 +207,25 @@ span i.far:active{
 }
 
 #pager{
-    display: inline-block; 
-    align-self: center; 
+    display: inline-block;
+    align-self: center;
+    font-size: 1rem;
 }
 
-#pager a{
-    font-size: 24px;
+#pager .pagination{ 
+    margin: 0;
 }
 
-#pager .fa{
-    font-weight: 600;
-    font-size: 22px;
+#pager #select-page{
+   border-radius: 0.25rem 0 0 0.25rem;
+}
+
+#pager i{
+    font-size: 20px;
 }
 
 #pager .page-item:last-child .page-link{
-    border-radius: 0 0.25rem 0.25rem 0;;
+    border-radius: 0 0.25rem 0.25rem 0;
 }
 
 .search-container{

@@ -1,31 +1,49 @@
-loadAllFilesConfig = (loadedfiles) => {
-    let tempFiles = loadedfiles.map(f=> { return { Id: f.Id, Name: f.Name, Path: f.Folder.Path} });
-    let loadFiles = () => {
-        let filter = $('.search-input').val();
+loadAllFilesConfig = (loadView, play) => {
+    
+    
+    $('#all-files').on('dblclick', 'li', play);
 
-        let files = tempFiles.filter(f=> f.Name.toLowerCase().includes(filter.toLowerCase()));
-
-        $('#all-files').empty().append(renderer('file-list', 
-            { files , edit: true }
-        ));
-
-        $('#total-items').text(files.length);
-        return files;
-    }
-
-    $('#search-form').submit((e) => {
-        e.preventDefault();
-        loadFiles();
+    $('#all-files').on('keydown', 'li', (e) => {
+        event.preventDefault();
+        switch (e.keyCode) {
+            case 13:
+                {
+                    play(e); 
+                    e.stopPropagation();
+                    break;
+                }
+        }
     });
+    
 
     $('#search-form').on('click', '.clear-search', (e) => {
         e.target.closest('span').previousSibling.value = "";
-        loadFiles();
+        loadView(1, "");
     });
 
-    $('#all-files').on('dblclick', 'li', (e) => {
-        let id = e.target.closest('li').id;
-        config.playList = loadFiles();
-        playAudio(config.playList.find(f => f.Id === id));
+   $('#search-form').submit((e)=>{ 
+         e.preventDefault();
+         let filter = $('.search-input').val();
+         loadView(1, filter);
     });
+
+    $('#items-container').on('click', '.page-link', (e)=>{ 
+        let filter = $('.search-input').val();
+        let page = parseInt(e.target.closest('span').dataset.page);
+        loadView(page, filter);
+    });
+    
+    $('#select-page').change(e=>{
+         let filter = $('.search-input').val();
+         loadView(parseInt(e.target.value), filter);
+    });
+
+    selectLast = () => {
+        let id = config.currentFile.Id;
+
+        if (!$('#' + id)[0]) id = $('li').attr('id');
+        selectListRow($('#' + id));
+    }
+    
+    selectLast();
 }

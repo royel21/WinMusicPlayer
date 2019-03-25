@@ -48,6 +48,8 @@ setfullscreen = () => {
     }
 }
 
+const setAlwaysOnTop = (state) => mainWindow.setAlwaysOnTop(state);
+
 $('#btn-sys-min').on('click', minWindow);
 $('#btn-sys-max').on('click', maxWindow);
 $('.btn-sys-close').on('click', closeWindow);

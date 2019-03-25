@@ -1,7 +1,8 @@
 listConfig = () => {
-
+    const getFilesListId = () => $('#sub-content input[type=radio]:checked').attr('id');
+    
     let loadFiles = () => {
-        let id = $('#sub-content input[type=radio]:checked').attr('id');
+        let id = getFilesListId();
         let listId = getSelectedId();
         let val = $('#list-b').closest('.col-6').find('.search-input').val();
         let condition = { val: `%${val}%`, Id: listId || "", not: '' };
@@ -12,7 +13,7 @@ listConfig = () => {
 
         getFileList(condition).then(files => {
             $('#list-b').empty().append(renderer('file-list', { add: !id.includes('content'), files }));
-            $('#total-files').text($('#content-b li').length);
+            $('#content-b #total-items').text(files.length);
         });
     }
 
@@ -25,19 +26,21 @@ listConfig = () => {
 
     $('#content-b').on('dblclick', '#list-b li', (e) => {
         let id = e.target.closest('li').id;
-        console.log(id);
-        db.list.findOne({
-            where: { Id: getSelectedId() },
-            include: {
-                model: db.file,
-                include: { model: db.folder }
-            }
-
-        }).then(list => {
-            loadPlayList(list.Files).then(() => {
-                playAudio(config.playList.find(f => f.Id === id));
+        if(getFilesListId().includes('content')){
+            console.log(id);
+            db.list.findOne({
+                where: { Id: getSelectedId() }
+            }).then(list => {
+                list.getFiles().then(files=>{
+                    loadPlayList(files.map(f=> f.Id));
+                    playAudio(id);
+                });
             });
-        });
+        }else{
+            loadPlayList([id]);
+            playAudio(id);
+
+        }
     });
 
     $('#search-form').on('click', '.clear-search', (e) => {
@@ -94,6 +97,4 @@ listConfig = () => {
             }
         });
     });
-    loadFiles();
 }
-listConfig();
