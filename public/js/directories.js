@@ -6,6 +6,7 @@ loadDirectoryConfig = () => {
             properties: ['openDirectory', 'createDirectory', 'showHiddenFiles'],
             defaultPath: path.join(os.homedir(), 'Music')
         });
+        
         if (dir) {
             db.directory.findOrCreate({
                 where: {

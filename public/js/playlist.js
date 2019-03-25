@@ -73,11 +73,14 @@ listConfig = () => {
 
     $('.show-form').click((e) => {
 
-        let $modalContainer = $(renderer('modal'));
+        let $modalContainer = $(renderer('modal-task'));
+        $modalContainer.hide();
         $('body').prepend($modalContainer);
         let $modal = $modalContainer.find('#modal');
-
-        $modal.fadeIn('fast');
+        $modalContainer.fadeIn('fast',()=>{
+            
+            $modal.fadeIn('fast');
+        });
 
         $modal.find('.close-modal').click(hideModal);
         $modal.find('#create-list').click((e) => {
@@ -95,6 +98,20 @@ listConfig = () => {
                     console.log(err)
                 });
             }
+        });
+        let file;
+        $modal.find('#f-name').click(e=>{
+            var files = dialog.showOpenDialog(mainWindow, {
+                title: "Select the tone",
+                properties: ['openFile', 'showHiddenFiles'],
+                defaultPath: path.join(os.homedir(), 'Music')
+            });
+            if(files){ 
+                file = files[0];
+                $('#f-name').text(path.basename(file));
+            }
+            console.log(file);
+
         });
     });
 }

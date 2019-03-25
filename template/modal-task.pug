@@ -1,0 +1,41 @@
+#modal-container
+    #modal.card.bg-dark.text-light.modal-task
+        #modal-header.text-center
+            h3 Create Play List
+        #errors.text-danger.text-center
+        .input-group.my-3
+            .input-group-prepend
+                label.input-group-text(for="name") Task Name
+            input#name.form-control(required="" type="text" name="name" value="")
+        .input-group.my-3
+            .input-group-prepend
+                label.input-group-text Days
+            #days.form-control
+                input#mon(type="checkbox" name="mon" value="1")
+                label(for="mon") Mon
+                input#tue(type="checkbox" name="tue" value="2")
+                label(for="tue") Tue
+                input#wed(type="checkbox" name="wed" value="3")
+                label(for="wed") Wed
+                input#thu(type="checkbox" name="thu" value="4")
+                label(for="thu") Thu
+                input#fri(type="checkbox" name="fri" value="5")
+                label(for="fri") Fri
+                input#sat(type="checkbox" name="sat" value="6")
+                label(for="sat") Sat
+                input#sun(type="checkbox" name="sun" value="7")
+                label(for="sun") Sun
+        .input-group.my-3
+            .input-group-prepend
+                label.input-group-text(for="name") Time
+            input#name.form-control(required="" type="time" name="name" value=""+ (item ? item.Name : ""))
+
+        .input-group.my-3
+            .input-group-prepend
+                label.input-group-text Tone
+            label.file-form.form-control(for="file")
+                span#f-name Choose Tone
+
+        .text-center.my-3
+            button.btn.btn-secondary.close-modal(type="button") Cancel
+            button#create-list.btn.btn-primary.ml-2 Create

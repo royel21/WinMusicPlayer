@@ -203,3 +203,27 @@
 #items-container .list-group-item .fas:active{
     transform: scale(1.1);    
 }
+
+#modal .input-group-text{
+    width: 100px; 
+    font-weight: bold;
+}
+
+#days label{
+    font-weight: bold;
+    margin: 0 4px;
+    color: grey;
+    cursor: pointer;
+}
+
+#days input{
+    display: none;
+}
+
+#days input:checked + label{
+    color: black;
+}
+
+#f-name{
+    cursor: pointer;
+}

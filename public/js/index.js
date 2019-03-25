@@ -28,6 +28,7 @@ var config = {
 }
 
 const savePlayList = async () => {
+    await player.pause();
     let list = await db.list.findOne({ where: { Name: 'Playing' } });
     await list.removeFiles();
     await list.addFiles(OriginalPlayList);

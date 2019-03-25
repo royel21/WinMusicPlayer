@@ -4,7 +4,7 @@
             .title
                 span Play List
         include ./controls
-        +search(true, lists.length)
+        +search(true, lists.length-1)
         #list-a.list-container
             ul.list-group-flush
                 for item in lists
