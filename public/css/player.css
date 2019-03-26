@@ -36,17 +36,45 @@ label[for=v-mute]{
     margin-left: 10px;
 }
 
-#vol-slider[value="0"] + label #vol-icon:after{
-    content: '\f6a9';
+.vol-icon{
+    cursor: pointer;
 }
 
-#v-mute:checked + #vol-icon:after{
-   content: '\f6a9';
+.vol-icon svg path:not(:first-child){
+    display: none;
 }
 
-#vol-icon:after{
-    content: '\f028';
+.vol-slider[value="0"] + .vol-icon #vol-mute,
+#v-mute:checked + svg #vol-mute{
+    display: initial;
 }
+
+.vol-slider[value^="0.0"] + .vol-icon #vol-low,
+.vol-slider[value^="0.1"] + .vol-icon #vol-low,
+.vol-slider[value^="0.2"] + .vol-icon #vol-low,
+.vol-slider[value^="0.3"] + .vol-icon #vol-low{
+    display: initial;
+}
+
+.vol-slider[value^="0.4"] + .vol-icon #vol-med,
+.vol-slider[value^="0.5"] + .vol-icon #vol-med,
+.vol-slider[value^="0.6"] + .vol-icon #vol-med,
+.vol-slider[value^="0.7"] + .vol-icon #vol-med{
+    display: initial;
+}
+
+.vol-slider[value^="0.8"] + .vol-icon #vol-high,
+.vol-slider[value^="0.9"] + .vol-icon #vol-high,
+.vol-slider[value="1"] + .vol-icon #vol-high{
+    display: initial;
+}
+
+#v-mute:checked + svg #vol-low,
+#v-mute:checked + svg #vol-med,
+#v-mute:checked + svg #vol-high{
+    display: none;
+}
+
 
 #v-play:checked+i:before {
     content: "\f28b";

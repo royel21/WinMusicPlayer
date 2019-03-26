@@ -1,6 +1,6 @@
 .list-container{
     overflow: auto;
-    height: calc(100% - 52px);
+    height: calc(100% - 50px);
 }
 
 .list-container::-webkit-scrollbar{
@@ -141,6 +141,10 @@
     font-weight: 500;
 }
 
+.list-group-flush .list-group-item:not(.active):hover{
+    background-color: rgba(0,0,0, .1);
+}
+
 .list-group-item .v-name{
     white-space: nowrap;
 }
@@ -221,7 +225,7 @@
 }
 
 #days input:checked + label{
-    color: black;
+    color: #007bff;
 }
 
 #f-name{

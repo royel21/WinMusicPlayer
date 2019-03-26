@@ -18,8 +18,6 @@ var playList;
 var OriginalPlayList;
 const itemPerPage = 250;
 
-
-
 var config = {
     volume: 0.5,
     shuffle: false,
@@ -182,7 +180,7 @@ const loadView = async (id) => {
     delete listConfig;
     delete foldersConfig;
     delete playingConfig;
-    delete taskConfig;
+    delete loadTasks;
     delete directoriesConfig;
     delete loadAllFilesConfig;
 
@@ -196,11 +194,6 @@ const loadView = async (id) => {
             let lists = await db.list.findAll({ order: ['Name'] });
 
             let files = lists[0] ? await lists[0].getFiles() : [];
-
-//             if (lists.length > 0) {
-//                 files = await getFileList({ val: "", Id: lists[0].Id, not: '' });
-//             }
-            console.log(files)
             $container.empty().append(renderer('playlist', { lists, files }));
             $('#list-a li:first-child').addClass('active');
             $('#list-b li:first-child').addClass('active');
@@ -230,8 +223,9 @@ const loadView = async (id) => {
             break;
         }
         case "tab-shedules": {
-            $container.empty();
-            script = "shedules.js";
+            $container.empty().append(renderer('tasks', {}));
+            loadScript("task.js");
+            loadTasks();
             break;
         }
         case "tab-directories": {
@@ -251,7 +245,7 @@ $('#nav-menu input[type=radio]').change((e) => {
 
 /********************************* Player ********************************************************* */
 
-let volcontrol = document.getElementById('vol-slider');
+let volcontrol = $('.vol-slider')[0];
 let btnPlay = document.getElementById('v-play');
 let btnMuted = document.getElementById('v-mute');
 let player = document.getElementById('player');
@@ -264,6 +258,8 @@ Slider.min = 0;
 Slider.value = 0;
 Slider.max = 0;
 Slider.setPreviewContent($('<span id="v-current-time">'));
+player.volume = config.volume; 
+volcontrol.setAttribute('value', config.volume);
 
 Slider.onPreview = (value) => {
     $('#v-current-time').text(formatTime(Math.floor(value)));
