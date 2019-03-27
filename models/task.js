@@ -2,7 +2,7 @@
 const path = require('path');
 
 module.exports = (sequelize, DataTypes) => {
-    const Folder = sequelize.define('Task', {
+    const Task = sequelize.define('Task', {
         Id: {
             type: DataTypes.STRING(20),
             unique: true,
@@ -38,11 +38,11 @@ module.exports = (sequelize, DataTypes) => {
                 }
             },
             instanceMethods: {
-                getTone: function() {
+                Name: function() {
                     return path.basename(this.Tone);                
                 }
               }
         });
 
-    return Folder;
+    return Task;
 }

@@ -59,46 +59,26 @@ listConfig = () => {
                     li.remove();
                 });
             });
-        } else {
-
-        }
+        } 
     });
 
-    hideModal = (e) => {
-        $('#modal').fadeOut('slow', (e) => { });
-        $('#modal-container').fadeOut('slow', (e) => {
-            $('#modal-container').remove();
-        });
-    }
-
-    $('.show-form').click((e) => {
-
-        let $modalContainer = $(renderer('modal'));
-        $modalContainer.hide();
-        $('body').prepend($modalContainer);
-        let $modal = $modalContainer.find('#modal');
-        $modalContainer.fadeIn('fast',()=>{
-            
-            $modal.fadeIn('fast');
-        });
-
-        $modal.find('.close-modal').click(hideModal);
-        $modal.find('#create-list').click((e) => {
+    $('.show-form').click((e) => { 
+         showModal('modal-textbox', { modalTitle: "Create Play List", btnAccept: "Create" }, async ($modal) =>{
             let val = $modal.find('#name').val();
             if (val.length > 0) {
-                db.list.create({ Name: val }).then(list => {
+                try{
+                    let list = await db.list.create({ Name: val });
                     if (list) {
                         console.log(list)
                         $('#list-a').append(renderer('list-row', { list }));
-                        hideModal();
-                    } else {
 
                     }
-                }).catch(err => {
-                    console.log(err)
-                });
+                }catch(error){
+                     $modal.find('#errors').append(`<span>Duplicate Name</span>`);
+                     return Promise.reject(error);
+                }
+                
             }
-        });
-        
+         });
     });
 }

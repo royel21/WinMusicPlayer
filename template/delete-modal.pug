@@ -1,0 +1,12 @@
+#modal-container
+    #modal.card.bg-dark.text-light
+        #modal-header.text-center
+            h3 Delete File
+        #errors.text-danger.text-center.font-weight-bold
+            #msg Are you sure, you wnat to delete this file:
+            .text-primary= file+" "
+                span.text-danger from Disk
+        .text-center.my-3
+            button.btn.btn-secondary.close-modal(type="button") Cancel
+            button#accept.btn.btn-primary.ml-2 Delete
+        

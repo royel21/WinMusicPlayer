@@ -267,6 +267,7 @@ span i.far:active{
     display: none;
     height: fit-content;
     min-width: 400px;
+    max-width: 450px;
     padding: 20px 15px;
     border: 1px solid;
 }
