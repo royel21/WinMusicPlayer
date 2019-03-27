@@ -16,7 +16,7 @@ const $container = $('#container');
 
 var playList;
 var OriginalPlayList;
-const itemPerPage = 250;
+const itemPerPage = 500;
 
 var config = {
     volume: 0.5,
@@ -27,8 +27,9 @@ var config = {
 
 const savePlayList = async () => {
     await player.pause();
-    let list = await db.list.findOne({ where: { Name: 'Playing' } });
-    await list.removeFiles();
+    let list = await db.list.findOne({where: {Name: "Playing"}});
+//     await db.sqlze.query(`Delete from FileLists where ListId = ${list.Id}`);
+//     let files = await db.file.findAll({where:{id: OriginalPlayList}});
     await list.addFiles(OriginalPlayList);
 }
 
