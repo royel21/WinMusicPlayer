@@ -1,7 +1,7 @@
 #items-container
     include ./controls
     +search(true, directories.length)
-    #list-dirs.list-container
+    #list-dirs.list-container.bg-gradiants
         ul.list-group-flush
             for item in directories
                 li.list-group-item.popup-msg(id=item.Id data-title=item.Path tabindex="0")

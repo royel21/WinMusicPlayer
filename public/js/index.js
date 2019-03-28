@@ -193,7 +193,7 @@ $(() => {
         config = tempConfig;
     }
     
-    player.volume = volcontrol.value = config.volume;
+    player.volume = volcontrol.value = parseFloat(config.volume);
     btnShuffler.checked = config.shuffle;
 
     db.init().then(() => {
@@ -205,6 +205,4 @@ $(() => {
             });
         });
     });
-
-    console.clear();
 });

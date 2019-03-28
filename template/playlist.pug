@@ -5,7 +5,7 @@
                 span Play List
         include ./controls
         +search(true, lists.length-1)
-        #list-a.list-container
+        #list-a.list-container.bg-gradiants
             ul.list-group-flush
                 for item in lists
                     if item.Name === 'Playing'
@@ -27,7 +27,7 @@
                     label.nav-link(for="tab-audio-all") All Files
         include ./controls
         +search(false, files.length)
-        #list-b.list-container
+        #list-b.list-container.bg-gradiants
             ul.list-group-flush
                 for item in files
                     li.list-group-item(id=item.Id tabindex="0")

@@ -1,6 +1,23 @@
 listConfig = () => {
     const getFilesListId = () => $('#sub-content input[type=radio]:checked').attr('id');
-    
+    const createList = (e) => showModal('modal-textbox', { modalTitle: "Create Play List", btnAccept: "Create" }, async ($modal) =>{
+            let val = $modal.find('#name').val();
+            if (val.length > 0) {
+                try{
+                    let list = await db.list.create({ Name: val });
+                    if (list) {
+                        console.log(list)
+                        $('#list-a').append(renderer('list-row', { list }));
+
+                    }
+                }catch(error){
+                     $modal.find('#errors').append(`<span>Duplicate Name</span>`);
+                     return Promise.reject(error);
+                }
+                
+            }
+         });
+         
     let loadFiles = () => {
         let id = getFilesListId();
         let listId = getSelectedId();
@@ -25,9 +42,13 @@ listConfig = () => {
     });
 
     $('#content-b').on('dblclick', '#list-b li', (e) => {
+        console.log(e.target);
+        if($(e.target).hasClass('fas')) return;
+
         let id = e.target.closest('li').id;
+
         if(getFilesListId().includes('content')){
-            console.log(id);
+            
             db.list.findOne({
                 where: { Id: getSelectedId() }
             }).then(list => {
@@ -47,9 +68,9 @@ listConfig = () => {
         e.target.closest('span').previousSibling.value = "";
         loadFiles();
     });
-
+   
     $('#list-b').on('click', '.add-to-list', (e) => {
-        if (getSelectedId().length > 0) {
+        if (getSelectedId()) {
             let li = e.target.closest('li');
             db.filelist.create({
                 FileId: li.id,
@@ -59,26 +80,10 @@ listConfig = () => {
                     li.remove();
                 });
             });
+        }else{
+            createList(e);
         } 
     });
 
-    $('.show-form').click((e) => { 
-         showModal('modal-textbox', { modalTitle: "Create Play List", btnAccept: "Create" }, async ($modal) =>{
-            let val = $modal.find('#name').val();
-            if (val.length > 0) {
-                try{
-                    let list = await db.list.create({ Name: val });
-                    if (list) {
-                        console.log(list)
-                        $('#list-a').append(renderer('list-row', { list }));
-
-                    }
-                }catch(error){
-                     $modal.find('#errors').append(`<span>Duplicate Name</span>`);
-                     return Promise.reject(error);
-                }
-                
-            }
-         });
-    });
+    $('.show-form').click(createList);
 }

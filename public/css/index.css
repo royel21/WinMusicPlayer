@@ -20,13 +20,10 @@ body,
     float: right;
 }
 
-.main {
-    position: relative;
+.bg-gradiants{
+    color: white;
     background-color: #14243d;
     background: radial-gradient(ellipse at center, #14243d 0%,#030611 100%);
-    border-radius: 1.1em;
-    height: 100%;
-    padding-top: 43px;
 }
 
 #container{

@@ -1,6 +1,6 @@
 .list-container{
     overflow: auto;
-    height: calc(100% - 50px);
+    height: calc(100% - 49px);
 }
 
 .list-container::-webkit-scrollbar{
@@ -27,7 +27,7 @@
 #list-b,
 #list-a{
     overflow-y: auto;
-    height: calc(100% - 100px);
+    height: calc(100% - 99px);
 }
 
 #list-a .fa-folder{
@@ -44,6 +44,7 @@
     user-select: none;
     height: calc(100% - 8px);
     overflow-y: hidden;
+    background-color: rgba(27, 14, 209, 0.904);
 }
 
 #container > h2{
@@ -51,11 +52,13 @@
 }
 
 #items-container{
-    border: 2px solid;
+    border: 2px solid black;
     margin: 0;
     flex-direction: row;
     height: calc(100% - 87px);
     border-radius: .25rem;
+    padding: 1px 0;
+    background-color: black;
 } 
 
 
@@ -68,10 +71,9 @@
     font-size: 20px;
     height: 50px;
     border-bottom: 2px solid #dee2e6;
+    color: white;
 }
-.list-titles .nav-tabs{
-    background-color: white;
-}
+
 #total-files,
 .list-titles #total-videos{
     position: absolute;
@@ -139,10 +141,16 @@
     overflow: hidden;
     min-height: 40px;
     font-weight: 500;
+    background-color: initial;
+    border: initial;
 }
 
-.list-group-flush .list-group-item:not(.active):hover{
-    background-color: rgba(0,0,0, .1);
+#items-container .list-group-flush .list-group-item:not(.active):hover{
+    background-color: rgba(255,255,255, 0.1);
+}
+
+#items-container li.active{
+     background-color: rgba(00, 123, 255, 0.65);
 }
 
 .list-group-item .v-name{
@@ -162,6 +170,7 @@
     border-bottom: 1px solid rgba(0,0,0,.125);
 }
 
+#items-container .list-group-item .fa-edit,
 #items-container .list-group-item .fa-sync{
     color: #007bff;
 }

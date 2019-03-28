@@ -1,7 +1,7 @@
 #items-container
     include ./controls
     +search(false, files.length)
-    #play-list.list-container
+    #play-list.list-container.bg-gradiants
         ul.list-group-flush
             for item in files
                 li.list-group-item(id=item.Id tabindex="0")

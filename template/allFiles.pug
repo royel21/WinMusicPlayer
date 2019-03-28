@@ -1,7 +1,7 @@
 #items-container
     include ./controls
     +search(false, files.count, pages.search, pages)
-    #all-files.list-container
+    #all-files.list-container.bg-gradiants
         ul.list-group-flush
             for item in files.rows
                 li.list-group-item(id=item.Id tabindex="0")

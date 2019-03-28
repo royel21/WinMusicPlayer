@@ -5,7 +5,7 @@
                 span Folders
         include ./controls
         +search(buttonTest, listA.rows.length)
-        #list-a.list-container
+        #list-a.list-container.bg-gradiants
             ul.list-group-flush
                 for item in listA.rows
                     li.list-group-item.popup-msg(id=item.Id data-title=item.Path tabindex="0")
@@ -17,7 +17,7 @@
                 span Content
         include ./controls
         +search(false, listB.rows.length)
-        #list-b.list-container
+        #list-b.list-container.bg-gradiants
             ul.list-group-flush
                 for item in listB.rows
                     li.list-group-item(id=item.Id tabindex="0")
