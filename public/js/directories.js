@@ -29,12 +29,18 @@ loadDirectoryConfig = () => {
 
     $('#list-dirs').on('click', 'li .remove', (e) => {
         let li = e.target.closest('li');
-        db.directory.findOne({ where: { Id: li.id } }).then(dir => {
-            dir.destroy().then(() => {
-                $(li).fadeOut('fast', () => {
+        db.directory.destroy({ where: { Id: li.id } }).then(() => {
+            $(li).fadeOut('fast', () => {
                     li.remove();
-                });
             });
         });
-    })
+    });
+
+    $('#list-dirs').on('click', 'li .fa-sync', (e) => {
+        let li = e.target.closest('li');
+        li.querySelector('.fa-sync').classList.add('fa-spin');
+        if(li){
+             createBackgroundWin('scan-or-rescan', { id: li.id, reScan: true });
+        }
+    });
 }

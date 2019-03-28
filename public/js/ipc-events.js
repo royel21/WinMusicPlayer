@@ -27,6 +27,6 @@ ipcRenderer.on('error', (event, msg) => {
 ipcRenderer.on('scan', (event, data) => {
     console.log("scan: ", data.time)
     if (data.done) {
-        $('#' + data.Id).find('.fa-sync').removeClass('fa-spin');
+        $('#' + data.Id).find('.fa-sync').removeClass('fa-spin').attr('id',data.newId);
     }
 });

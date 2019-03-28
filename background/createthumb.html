@@ -23,7 +23,7 @@
         return value && JSON.parse(value);
     }
     var log;
-    
+
     var tempFiles = [];
     var dirId;
 
@@ -122,26 +122,35 @@
         if (createfiles.length > 0) await db.file.bulkCreate(createfiles);
         createfiles = [];
     }
-    
+
     ipc.on('scan-or-rescan', function (event, data, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId);
         log = fromWindow.webContents.send;
-            
-        dirId = data.id;
 
         scan = async () => {
             timer = new Date();
-            if(data.reScan){
-                await db.directory.destroy({where:{Id: data.id}});
+            let dir = await db.directory.findOne({ where: { Id: data.id } });
+            if (data.reScan) {
+                await dir.destroy();
+                dir = await db.directory.create({
+                    Name: dir.Name,
+                    Path: dir.Path,
+                    Scanning: true
+                });
             }
-            let dir = await db.directory.findOne({where:{Id: data.id}});
-            scanOneDir(dir.Path);
-            await dir.update({Scanning: false});
-            log('scan', {done: true, Id: dir.Id, time: (new Date() - timer)});
-            // window.close();
+            await dir.update({Scanning: true});
+
+            dirId = dir.Id;
+            await scanOneDir(dir.Path);
+            await dir.update({ Scanning: false });
+            log('scan', { done: true, Id: data.id, newId: dir.Id, time: (new Date() - timer) });
+            window.close();
         }
 
-        scan();
+        scan().catch(err=>{
+            console.log(err)
+            log('error', err);
+        });
     });
 
     ipc.on('scan-dirs', function (event, data, fromWindowId) {
@@ -155,11 +164,11 @@
                     timer = new Date();
                     dirId = f.Id;
                     await scanOneDir(f.Path);
-                    await f.update({Scanning: false});
-                    log('scan', {done: true, Id: f.Id, time: (new Date() - timer)});
+                    await f.update({ Scanning: false });
+                    log('scan', { done: true, Id: f.Id, time: (new Date() - timer) });
                 }
             }
-            
+
             window.close();
         }
         scanDirs();

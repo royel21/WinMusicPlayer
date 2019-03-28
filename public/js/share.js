@@ -45,7 +45,7 @@ const showModal = (modal, data, callback) =>{
         });
         if(files){ 
             $('#f-name').data('path', files[0]);
-            $('#f-name').text(path.basename(file));
+            $('#f-name').text(path.basename(files[0]));
         }
     });
 }
@@ -83,7 +83,7 @@ const renameFile = (e) => {
             if (li) {
                 let file = await db.file.findOne({ where: { Id: li.id }, include: { model: db.folder } });
                 if (file) {
-                    await file.update({Name: $name.val()});
+                    await file.update({Name: $name.val(), NameNormalize: nameFormat($name.val())});
                     let oldPath = path.join(file.Folder.Path, $oldName.text());
                     let newPath = path.join(file.Folder.Path, $name.val());
                     fs.moveSync(oldPath, newPath);

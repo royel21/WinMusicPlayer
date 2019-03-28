@@ -12,6 +12,7 @@ foldersConfig = (loadedFiles) =>{
         tempFiles = files;
         $('#list-b').empty().append(renderer('file-list', { files, edit: true }));
         $('#right-panel #total-items').text(files.length);
+        console.log("test")
      }
 
     $('#right-panel').on('submit', '#search-form', (e)=>{ 
