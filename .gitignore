@@ -6,4 +6,5 @@ local_modules/win-explorer/bin/
 local_modules/win-explorer/build/
 local_modules/win-explorer/test/
 *.db
-*.html
+index.html
+index.1.html
