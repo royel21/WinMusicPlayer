@@ -10,8 +10,6 @@ const id3 = require('id3js');
 
 const btnShuffler = document.getElementById('random-audio');
 
-const getSelectedId = () => $('#list-a .active').attr('id');
-
 const $container = $('#container');
 
 var playList;
@@ -68,6 +66,8 @@ const loadAllFiles = async (page, search) => {
     $('#list-a li:first-child').addClass('active');
 
     const play = (e) => {
+        if($(e.target).hasClass('fa, fas, far')) return;
+        
         let id = e.target.closest('li').id;
         let filter = $('.search-input').val();
         db.file.findAll({
@@ -76,7 +76,6 @@ const loadAllFiles = async (page, search) => {
             attribute: ['Id', 'NameNormalize']
         }).then(files => {
             loadPlayList(files.map(f => f.Id));
-            playAudio(id);
         });
     }
 
@@ -99,7 +98,7 @@ loadPlayListView = async (page, search) => {
         },
         attribute: ['Id', 'Name', 'NameNormalize']
     });
-    
+
     pages.totalPages = Math.ceil(count / itemPerPage);
 
     $container.empty().append(renderer('allfiles', { files, pages }));
@@ -107,7 +106,6 @@ loadPlayListView = async (page, search) => {
 
     const play = (e) => {
         let li = e.target.closest('li');
-        playAudio(li.id);
         selectListRow($(li));
     }
 
@@ -129,7 +127,7 @@ const loadView = async (id) => {
             break;
         }
         case "tab-list": {
-            let lists = await db.list.findAll({ order: ['Name'], where:{Name:{[db.Op.not]:'000RCPLST'}} });
+            let lists = await db.list.findAll({ order: ['Name'], where: { Name: { [db.Op.not]: '000RCPLST' } } });
 
             let files = lists[0] ? await lists[0].getFiles() : [];
             $container.empty().append(renderer('playlist', { lists, files }));
@@ -160,7 +158,7 @@ const loadView = async (id) => {
             foldersConfig(listB.rows);
             break;
         }
-        
+
         case "tab-shedules": {
             $container.empty().append(renderer('tasks', {}));
             loadScript("task.js");
@@ -189,7 +187,7 @@ $(() => {
     if (tempConfig) {
         config = tempConfig;
     }
-    
+
     player.volume = volcontrol.value = parseFloat(config.volume);
     btnShuffler.checked = config.shuffle;
 

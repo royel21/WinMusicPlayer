@@ -8,7 +8,7 @@
         #list-a.list-container.bg-gradiants
             ul.list-group-flush
                 for item in listA.rows
-                    li.list-group-item.popup-msg(id=item.Id data-title=item.Path tabindex="0")
+                    li.folder.list-group-item.popup-msg(id=item.Id data-title=item.Path tabindex="0")
                         i.fas.fa-folder.mx-2
                         span#item-name= item.Name
     #right-panel.col-7.panel.files-list
@@ -20,7 +20,7 @@
         #list-b.list-container.bg-gradiants
             ul.list-group-flush
                 for item in listB.rows
-                    li.list-group-item(id=item.Id tabindex="0")
+                    li.file.list-group-item(id=item.Id tabindex="0")
                         span.show-form                   
                             i.ml-1.fas.fa-edit
                         span.v-remove.text-danger

@@ -1,4 +1,7 @@
 
+const getFolderOrPlayListId = () => $('#list-a .active').attr('id');
+const isView = (id) => $('input[name="tabs"]:checked').attr('id').includes(id);
+
 const loadPlayList = (files) => {
     OriginalPlayList = files;
     playList = [...OriginalPlayList];
@@ -7,7 +10,7 @@ const loadPlayList = (files) => {
     }
 }
 // hide modal
-const hideModal = () =>{
+const hideModal = () => {
     $('#modal').fadeOut('slow');
     $('#modal-container').fadeOut('slow', (e) => {
         $('#modal-container').remove();
@@ -16,34 +19,34 @@ const hideModal = () =>{
 
 $('body').on('click', '.close-modal', hideModal);
 //show modal
-const showModal = (modal, data, callback) =>{
+const showModal = (modal, data, callback) => {
     let $modal = $(renderer(modal, data));
     $modal.hide();
-     $('body').prepend($modal);
-    $modal.fadeIn('fast',()=>{
+    $('body').prepend($modal);
+    $modal.fadeIn('fast', () => {
         $modal.find('#modal').fadeIn('fast');
     });
-    $modal.on('click keydown', '#accept, #name', (e)=>{
+    $modal.on('click keydown', '#accept, #name', (e) => {
         let accept;
-        if(e.target.id === 'name' && e.keyCode === 13 || e.target.id == 'accept'){
+        if (e.target.id === 'name' && e.keyCode === 13 || e.target.id == 'accept') {
             accept = true;
         }
 
-        if(accept){
-            callback($modal.find('#modal')).then(()=>{
+        if (accept) {
+            callback($modal.find('#modal')).then(() => {
                 hideModal();
-            }).catch(err=>{
+            }).catch(err => {
 
             });
         }
     });
-    $modal.find('#f-name').click(e=>{
+    $modal.find('#f-name').click(e => {
         var files = dialog.showOpenDialog(mainWindow, {
             title: "Select the tone",
             properties: ['openFile', 'showHiddenFiles'],
             defaultPath: path.join(os.homedir(), 'Music')
         });
-        if(files){ 
+        if (files) {
             $('#f-name').data('path', files[0]);
             $('#f-name').text(path.basename(files[0]));
         }
@@ -53,25 +56,34 @@ const showModal = (modal, data, callback) =>{
 //Delete file from DB and disk
 const deleteFile = (e) => {
     let li = e.target.closest('li');
-
-    showModal('delete-modal', { file: $(li).find('#item-name').text() }, async () => {
-        try {
-            if (li) {
-                let file = await db.file.findOne({ where: { Id: li.id }, include: { model: db.folder } });
-                if (file) {
-                    fs.removeSync(path.join(file.Folder.Path, file.Name));
-                    await file.destroy();
-                    $(li).fadeOut('fast', () => {
-                        li.remove();
-                    });
+    if (isView('folder') || isView('all')) {
+        showModal('delete-modal', { file: $(li).find('#item-name').text() }, async () => {
+            try {
+                if (li) {
+                    let file = await db.file.findOne({ where: { Id: li.id }, include: { model: db.folder } });
+                    if (file) {
+                        fs.removeSync(path.join(file.Folder.Path, file.Name));
+                        await file.destroy();
+                        $(li).fadeOut('fast', () => {
+                            li.remove();
+                        });
+                    }
                 }
+            } catch (err) {
+                console.log(err)
+                return Promise.reject(error);
             }
-        } catch (err) {
-            console.log(err)
-            return Promise.reject(error);
-        }
-    });
+        });
+    } else if (isView('playing')) {
+        db.list.findOne({ where: { Name: '000RCPLST' } }).then(list => {
+            list.removeFiles([li.id]).then(files => {
+                console.log(files);
+            });
+        });
+    }
+    e.stopPropagation();
 }
+
 
 //Rename File from disk
 $('body').on('click', '.files-list .fa-edit', (e) => {
@@ -83,7 +95,7 @@ $('body').on('click', '.files-list .fa-edit', (e) => {
             if (li) {
                 let file = await db.file.findOne({ where: { Id: li.id }, include: { model: db.folder } });
                 if (file) {
-                    await file.update({Name: $name.val(), NameNormalize: nameFormat($name.val())});
+                    await file.update({ Name: $name.val(), NameNormalize: nameFormat($name.val()) });
                     let oldPath = path.join(file.Folder.Path, $oldName.text());
                     let newPath = path.join(file.Folder.Path, $name.val());
                     fs.moveSync(oldPath, newPath);
@@ -132,6 +144,27 @@ $('#container').on('keydown', 'ul li', (e) => {
                 event.preventDefault();
                 break;
             }
+         case 13:
+            {
+                if($(e.target).hasClass('file')){
+
+                    playAudio(e.target.closest('li').id);
+                    
+                }else if($(e.target).hasClass('folder')){
+                       loadFolderontent(e.target.closest('li').id);
+                }else{
+
+                }
+                e.stopPropagation();
+                break;
+            }
     }
+});
+
+
+$('#container').on('dblclick', '.files-list li', (e)=> {
+    if($(e.target).hasClass('fa, fas, far')) return;
+    
+    playAudio(e.target.closest('li').id);
 });
 

@@ -4,19 +4,6 @@ loadAllFilesConfig = (loadView, play) => {
 
     $('#all-files').on('click', '.fa-trash-alt', deleteFile);
 
-    $('#all-files').on('keydown', 'li', (e) => {
-        event.preventDefault();
-        switch (e.keyCode) {
-            case 13:
-                {
-                    play(e);
-                    e.stopPropagation();
-                    break;
-                }
-        }
-    });
-
-
     $('#search-form').on('click', '.clear-search', (e) => {
         e.target.closest('span').previousSibling.value = "";
         loadView(1, "");

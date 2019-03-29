@@ -4,17 +4,17 @@
             .title
                 span Play List
         include ./controls
-        +search(true, lists.length-1)
+        +search(true, lists.length)
         #list-a.list-container.bg-gradiants
             ul.list-group-flush
                 for item in lists
                     if item.Name === 'Playing'
                         -continue
-                    li.list-group-item(id=item.Id tabindex="0")
+                    li.plist.list-group-item(id=item.Id tabindex="0")
                         span.show-form                   
                             i.ml-1.fas.fa-edit
                         span.remove
-                            i.mx-1.text-danger.fas.fa-trash-alt
+                            i.mx-1.fas.fa-trash-alt
                         span#item-name= item.Name
     #content-b.col-6.panel.files-list
         .list-titles
@@ -30,7 +30,7 @@
         #list-b.list-container.bg-gradiants
             ul.list-group-flush
                 for item in files
-                    li.list-group-item(id=item.Id tabindex="0")
+                    li.file.list-group-item(id=item.Id tabindex="0")
                         span.v-remove.text-danger
                             i.fas.fa-trash-alt
                         span#item-name= item.Name

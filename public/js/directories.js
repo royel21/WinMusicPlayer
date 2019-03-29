@@ -6,7 +6,7 @@ loadDirectoryConfig = () => {
             properties: ['openDirectory', 'createDirectory', 'showHiddenFiles'],
             defaultPath: path.join(os.homedir(), 'Music')
         });
-        
+
         if (dir) {
             db.directory.findOrCreate({
                 where: {
@@ -31,7 +31,7 @@ loadDirectoryConfig = () => {
         let li = e.target.closest('li');
         db.directory.destroy({ where: { Id: li.id } }).then(() => {
             $(li).fadeOut('fast', () => {
-                    li.remove();
+                li.remove();
             });
         });
     });
@@ -39,8 +39,8 @@ loadDirectoryConfig = () => {
     $('#list-dirs').on('click', 'li .fa-sync', (e) => {
         let li = e.target.closest('li');
         li.querySelector('.fa-sync').classList.add('fa-spin');
-        if(li){
-             createBackgroundWin('scan-or-rescan', { id: li.id, reScan: true });
+        if (li) {
+            createBackgroundWin('scan-or-rescan', { id: li.id, reScan: true });
         }
     });
 }
