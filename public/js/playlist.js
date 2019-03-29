@@ -6,11 +6,14 @@ listConfig = () => {
                 try{
                     let list = await db.list.create({ Name: val });
                     if (list) {
-                        console.log(list)
-                        $('#list-a').append(renderer('list-row', { list }));
-
+                        $('#content-a li').removeClass('active');
+                        let $row = $(renderer('list-row', { list }));
+                        $row.focus();
+                        $('#list-a').append($row);
+                        
                     }
                 }catch(error){
+                    console.log(error)
                      $modal.find('#errors').append(`<span>Duplicate Name</span>`);
                      return Promise.reject(error);
                 }
@@ -64,7 +67,21 @@ listConfig = () => {
         }
     });
 
-    $('#search-form').on('click', '.clear-search', (e) => {
+    $('#content-a').on('click','.fa-trash-alt', (e)=>{
+        let li = e.target.closest('li');
+        if(li.id){
+            console.log(li.id);
+            db.list.destroy({where:{Id: li.id}}).then((result)=>{
+                $(li).fadeOut('fast', () => {
+                    li.remove();
+                    loadFiles();
+                });
+                console.log(result)
+            });
+        }
+    })
+
+    $('#content-b #search-form').on('click', '.clear-search', (e) => {
         e.target.closest('span').previousSibling.value = "";
         loadFiles();
     });

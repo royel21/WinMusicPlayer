@@ -74,7 +74,7 @@ const deleteFile = (e) => {
 }
 
 //Rename File from disk
-const renameFile = (e) => {
+$('body').on('click', '.files-list .fa-edit', (e) => {
     let li = e.target.closest('li');
     let $oldName = $(li).find('#item-name');
     showModal('modal-textbox', { modalTitle: "Rename File", btnAccept: "Rename", name: $oldName.text() }, async ($modal) => {
@@ -95,8 +95,7 @@ const renameFile = (e) => {
             return Promise.reject(error);
         }
     });
-}
-
+});
 
 /****************list share code****************************/
 

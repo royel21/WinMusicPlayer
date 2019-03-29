@@ -1,7 +1,7 @@
 
 const savePlayList = async () => {
     await player.pause();
-    let list = await db.list.findOne({ where: { Name: "Playing" } });
+    let list = await db.list.findOne({ where: { Name: "000RCPLST" } });
     let files = await list.getFiles();
     await list.removeFiles(files);
     await list.addFiles(OriginalPlayList);

@@ -45,7 +45,7 @@ db.init = async () => {
     });
     await db.list.findOrCreate({
         where: {
-            Name: 'Playing'
+            Name: '000RCPLST'
         }
     });
 }

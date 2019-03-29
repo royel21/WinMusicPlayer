@@ -4,15 +4,16 @@ foldersConfig = (loadedFiles) =>{
     
      loadFolderontent = async (Id) =>{
         let filter = $('#right-panel .search-input').val();
+        
         let files = await db.file.findAll({
             order: ['NameNormalize'],
             where: { [db.Op.and] : [{ FolderId: Id || "" }, { Name: { [db.Op.like]: "%" + (filter || "") + "%" } }] },
             attribute: ['Id', 'Name', 'NameNormalize']
         });
+
         tempFiles = files;
         $('#list-b').empty().append(renderer('file-list', { files, edit: true }));
         $('#right-panel #total-items').text(files.length);
-        console.log("test")
      }
 
     $('#right-panel').on('submit', '#search-form', (e)=>{ 
@@ -37,9 +38,8 @@ foldersConfig = (loadedFiles) =>{
         loadPlayList(tempFiles.map(f=> f.Id));
         playAudio(li.id);
     });
-    $('#list-b').on('click', '.fa-trash-alt', deleteFile);
 
-    $('#list-b').on('click', '.fa-edit', renameFile);
+    $('#list-b').on('click', '.fa-trash-alt', deleteFile);
 }
 
 

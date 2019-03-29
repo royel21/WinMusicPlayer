@@ -16,14 +16,14 @@
                         span.remove
                             i.mx-1.text-danger.fas.fa-trash-alt
                         span#item-name= item.Name
-    #content-b.col-6.panel
+    #content-b.col-6.panel.files-list
         .list-titles
             #sub-content.nav.nav-tabs
                 .nav-item
-                    input#tab-folder-content(type="radio" name="tabs" checked)
+                    input#tab-folder-content(type="radio" name="tabs-list" checked)
                     label.nav-link(for="tab-folder-content") List Content
                 .nav-item
-                    input#tab-audio-all(type="radio" name="tabs")
+                    input#tab-audio-all(type="radio" name="tabs-list")
                     label.nav-link(for="tab-audio-all") All Files
         include ./controls
         +search(false, files.length)

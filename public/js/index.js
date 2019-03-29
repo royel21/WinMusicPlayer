@@ -50,7 +50,6 @@ const loadScript = (script) => {
 var myList;
 
 const loadAllFiles = async (page, search) => {
-    console.time('start');
     let begin = ((page - 1) * itemPerPage);
     let items = await db.file.findAndCountAll({
         order: ['NameNormalize'],
@@ -82,14 +81,12 @@ const loadAllFiles = async (page, search) => {
     }
 
     loadAllFilesConfig(loadAllFiles, play);
-    console.timeEnd('start');
 }
 
 loadPlayListView = async (page, search) => {
     let count = OriginalPlayList.length;
     let pages = { currentPage: page, totalPages: 0, search };
     let begin = ((page - 1) * itemPerPage);
-    console.time('start');
     let files = await db.file.findAndCountAll({
         order: ['NameNormalize'],
         offset: begin,
@@ -102,6 +99,7 @@ loadPlayListView = async (page, search) => {
         },
         attribute: ['Id', 'Name', 'NameNormalize']
     });
+    
     pages.totalPages = Math.ceil(count / itemPerPage);
 
     $container.empty().append(renderer('allfiles', { files, pages }));
@@ -114,7 +112,6 @@ loadPlayListView = async (page, search) => {
     }
 
     loadAllFilesConfig(loadPlayListView, play);
-    console.timeEnd('start');
 }
 
 const loadView = async (id) => {
@@ -132,7 +129,7 @@ const loadView = async (id) => {
             break;
         }
         case "tab-list": {
-            let lists = await db.list.findAll({ order: ['Name'] });
+            let lists = await db.list.findAll({ order: ['Name'], where:{Name:{[db.Op.not]:'000RCPLST'}} });
 
             let files = lists[0] ? await lists[0].getFiles() : [];
             $container.empty().append(renderer('playlist', { lists, files }));
@@ -198,7 +195,7 @@ $(() => {
 
     db.init().then(() => {
         createBackgroundWin('scan-dirs');
-        db.list.findOne({ where: { Name: 'Playing' } }).then(list => {
+        db.list.findOne({ where: { Name: '000RCPLST' } }).then(list => {
             list.getFiles({ order: ['NameNormalize'] }).then(files => {
                 loadPlayList(files.map(f => f.Id));
                 loadView('tab-playing');

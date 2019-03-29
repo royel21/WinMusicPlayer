@@ -21,9 +21,9 @@
 }
 
 #nav-menu input[type="radio"]:checked + label{
-    background-color: #007bff;
-    border-color: #007bff;
+    border-color: rgba(27, 14, 209, 0.904);
     color: white;
+    background-color: rgba(27, 14, 209, 0.904);
 }
 
 
