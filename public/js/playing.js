@@ -1,11 +1,9 @@
 playingConfig = () => {
-
-
     $('#all-files').on('dblclick', 'li', play);
 
     $('#search-form').on('click', '.clear-search', (e) => {
-        e.target.closest('span').previousSibling.value = "";
-        loadPlayListView(1, "");
+        e.target.closest('span').previousSibling.value = '';
+        loadPlayListView(1, '');
     });
 
     $('#search-form').submit((e) => {

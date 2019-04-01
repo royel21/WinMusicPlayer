@@ -1,4 +1,3 @@
-
 const nextAudio = (e) => {
     let index = getIndex(config.currentFile);
     if (++index < playList.length) {
@@ -17,8 +16,7 @@ const prevAudio = (e) => {
     }
 }
 
-
-/********************************* Player ********************************************************* */
+// ********************************* Player *********************************************************
 
 let volcontrol = $('.vol-slider')[0];
 let btnPlay = document.getElementById('v-play');
@@ -58,18 +56,18 @@ volcontrol.oninput = (e) => {
 }
 
 const pauseOrPlay = () => {
-    var playPause = "Pausar";
+    var playPause = 'Pausar';
     if (player.paused) {
         player.play().catch(e => { });
     } else {
         player.pause();
-        playPause = "Reproducir";
+        playPause = 'Reproducir';
     }
 
     $('#video-viewer .fa-play-circle').attr('data-title', playPause);
 
     btnPlay.checked = player.paused;
-    if (player.src === "") {
+    if (player.src === '') {
         if (config.currentFile.Id !== 0) {
             playAudio(playList.find(f => f.Id === config.currentFile.Id));
         } else {
@@ -83,7 +81,7 @@ btnPlay.onchange = pauseOrPlay;
 player.ontimeupdate = (e) => {
     if (update && Slider) {
         Slider.value = Math.floor(player.currentTime);
-        $vTotalTime.text(formatTime(player.currentTime) + "/" + vDuration);
+        $vTotalTime.text(formatTime(player.currentTime) + '/' + vDuration);
         config.currentFile.current = player.currentTime;
     }
 }
@@ -97,15 +95,14 @@ player.onvolumechange = function (e) {
 
 btnMuted.onchange = () => {
     player.muted = btnMuted.checked;
-    $('.fa-volume-up').attr('data-title', btnMuted.checked ? "No Silenciar" : "Silenciar");
+    $('.fa-volume-up').attr('data-title', btnMuted.checked ? 'No Silenciar' : 'Silenciar');
 }
 
 player.onended = nextAudio;
 
-/********************Play audio file**************************************/
+// *******************Play audio file*************************************
 
 const playAudio = async (Id, prev) => {
-
     config.currentFile.Id = Id;
     selectListRow($('#' + Id));
     if (Id) {
@@ -117,7 +114,6 @@ const playAudio = async (Id, prev) => {
     }
 }
 /**************************************************************************/
-
 
 $('#v-next').click(nextAudio);
 $('#v-prev').click(prevAudio);

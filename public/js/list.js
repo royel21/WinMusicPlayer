@@ -1,6 +1,6 @@
 $('#sub-content input[type=radio]').change((e) => {
     let id = e.target.id;
-    let folderId = $('#list-a .active').attr('id') || "";
+    let folderId = $('#list-a .active').attr('id') || '';
     condition = { order: ['NameNormalize'] }
 
     if (id.includes('folder-content')) {

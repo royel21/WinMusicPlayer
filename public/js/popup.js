@@ -1,28 +1,21 @@
-var $popup = $('#popup')
-var inEl;
+var $popup = $('#popup');
 popupHide = (e) => {
     $popup.css({
-        display: "none"
-    }).text("");
+        display: 'none'
+    }).text('');
     $popup.removeClass('popup-top');
-    inEl = false;
 }
 
-
 popupShow = async (event) => {
-    inEl = true;
+    var element = $(event.target).closest('.popup-msg')[0];
 
-    var element = $(event.target).hasClass('popup-msg') ?
-        event.target : $(event.target).closest(".popup-msg")[0];
-
-    if (element != undefined) {
-
+    if (element !== undefined) {
         var rect = element.getBoundingClientRect();
         var msg = element.dataset.title;
         $popup.css({
-            display: "block",
-            top: -3000,
-        }).text(msg == undefined ? element.textContent : msg);
+            display: 'block',
+            top: -3000
+        }).text(msg === undefined ? element.textContent : msg);
 
         var top = rect.top + 8 + rect.height;
         if (top + $popup.height() + 10 > window.innerHeight) {
@@ -39,5 +32,3 @@ popupShow = async (event) => {
 
 $('body, .footer').on('mouseenter', '.popup-msg', popupShow);
 $('body, .footer').on('mouseleave wheel', '.popup-msg', popupHide);
-$('body, .footer').on('click', popupHide);
-$('.cancel-footer').on('mouseenter', popupHide);

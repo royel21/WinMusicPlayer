@@ -1,12 +1,11 @@
 loadAllFilesConfig = (loadView, play) => {
-
     $('#all-files').on('dblclick', 'li', play);
 
     $('#all-files').on('click', '.fa-trash-alt', deleteFile);
 
     $('#search-form').on('click', '.clear-search', (e) => {
-        e.target.closest('span').previousSibling.value = "";
-        loadView(1, "");
+        e.target.closest('span').previousSibling.value = '';
+        loadView(1, '');
     });
 
     $('#search-form').submit((e) => {

@@ -1,7 +1,7 @@
 
 const savePlayList = async () => {
     await player.pause();
-    let list = await db.list.findOne({ where: { Name: "000RCPLST" } });
+    let list = await db.list.findOne({ where: { Name: '000RCPLST' } });
     let files = await list.getFiles();
     await list.removeFiles(files);
     await list.addFiles(OriginalPlayList);
@@ -9,9 +9,8 @@ const savePlayList = async () => {
 
 ipcRenderer.on('save-file', (e) => {
     local.setObject('config', config);
-    savePlayList().then(() => ipcRenderer.send('close', ""));
+    savePlayList().then(() => ipcRenderer.send('close', ''));
 });
-
 
 ipcRenderer.on('reload', (event, msg) => {
     let id = $('#nav-menu input[type=radio]:checked').id;
@@ -25,7 +24,7 @@ ipcRenderer.on('error', (event, msg) => {
 });
 
 ipcRenderer.on('scan', (event, data) => {
-    console.log("scan: ", data.time)
+    console.log('scan: ', data.time)
     if (data.done) {
         $('#' + data.Id).find('.fa-sync').removeClass('fa-spin').attr('id', data.newId);
     }
