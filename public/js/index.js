@@ -185,6 +185,7 @@ $('#nav-menu input[type=radio]').change((e) => {
 $(() => {
     let tempConfig = local.getObject('config');
     if (tempConfig) {
+        console.log("loading config", tempConfig)
         config = tempConfig;
     }
 

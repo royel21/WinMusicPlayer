@@ -67,7 +67,7 @@ body,
 #btn-home,
 #btn-sys-min, 
 #btn-sys-max,
-.btn-sys-close{
+#btn-sys-close{
     display: inline-block;
     width: 45px;
     padding: 9.5px 10px;
@@ -86,14 +86,14 @@ body,
 #btn-home:hover,
 #btn-sys-min:hover, 
 #btn-sys-max:hover,
-.btn-sys-close:hover{
+#btn-sys-close:hover{
    cursor: pointer;
    background-color:rgba(53, 237, 243, 0.2);
 }
-.btn-sys-close{
+#btn-sys-close{
     border-radius: 0 0.25rem 0 0;
 }
-.btn-sys-close:hover{
+#btn-sys-close:hover{
     background-color: red;
 }
 .content{

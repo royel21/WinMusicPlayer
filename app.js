@@ -31,7 +31,8 @@ function createWin() {
         show: false,
         transparent: true,
         frame: false,
-        icon: path.join(__dirname, 'assets/icons/myicon-256.png')
+        icon: path.join(__dirname, 'assets/icons/myicon-256.png'),
+        webPreferences: { nodeIntegration: true }
     });
     win.setMenu(null);
     win.loadURL('file://' + __dirname + '/index.html');
@@ -64,7 +65,7 @@ function createWin() {
             app.quit();
         }
     });
-    
+
     win.openDevTools();
 }
 

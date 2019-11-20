@@ -7,6 +7,9 @@ const dialog = app.dialog;
 const mainWindow = app.getCurrentWindow();
 var isMaximized = false;
 
+const pageN = document.getElementById("page-n");
+
+
 closeWindow = () => mainWindow.close();
 minWindow = () => mainWindow.minimize();
 maxWindow = () => {
@@ -20,7 +23,7 @@ maxWindow = () => {
 }
 
 hideCorner = (state) => {
-    $('body').attr('wmaximize', state);
+    document.body.setAttribute('wmaximize', state);
     isMaximized = state;
 }
 
@@ -36,22 +39,20 @@ setfullscreen = () => {
     if (!document.webkitIsFullScreen) {
         document.body.webkitRequestFullscreen();
         mainWindow.setResizable(false);
-        $('#page-n').css({
-            display: 'none'
-        });
+       
+        pageN.style.display = "none"; 
     } else {
         document.webkitCancelFullScreen();
-        $('#page-n').css({
-            display: 'inline-block'
-        });
+        pageN.style.display = 'inline-block'
         mainWindow.setResizable(true);
     }
 }
 
 const setAlwaysOnTop = (state) => mainWindow.setAlwaysOnTop(state);
 
-$('#btn-sys-min').on('click', minWindow);
-$('#btn-sys-max').on('click', maxWindow);
-$('.btn-sys-close').on('click', closeWindow);
-$('.btn-fullscr').on('click', setfullscreen);
+document.getElementById("btn-sys-min").onclick = minWindow;
+document.getElementById("btn-sys-min").onclick = minWindow;
+document.getElementById("btn-sys-max").onclick = maxWindow;
+document.getElementById("btn-sys-close").onclick = closeWindow;
+// document.getElementById("btn-fullscr").onclick = setfullscreen;
 
