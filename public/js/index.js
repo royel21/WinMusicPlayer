@@ -180,7 +180,16 @@ $('#nav-menu input[type=radio]').change((e) => {
     loadView(id);
 });
 
-
+$("#a-player").on("wheel",(e)=>{
+    
+    if (e.originalEvent.deltaY < 0) {
+            volcontrol.value = player.volume + 0.05;
+            player.volume = volcontrol.value;
+        } else {
+            volcontrol.value -= 0.05;
+            player.volume = volcontrol.value;
+        }
+});
 /************************************************************************************************* */
 $(() => {
     let tempConfig = local.getObject('config');
