@@ -1,28 +1,33 @@
 loadDirectoryConfig = () => {
     $('.show-form').click((e) => {
-        var dir = dialog.showOpenDialog(mainWindow, {
+        var result = dialog.showOpenDialog(mainWindow, {
             title: 'Select the folder',
             properties: ['openDirectory', 'createDirectory', 'showHiddenFiles'],
             defaultPath: path.join(os.homedir(), 'Music')
         });
+        result.then(values => {
+            console.log(values);
+            if (!values.canceled) {
+                let dir = values.filePaths[0];
 
-        if (dir) {
-            db.directory.findOrCreate({
-                where: {
-                    Name: path.basename(dir[0]),
-                    Path: dir[0]
-                }
-            }).then(newDir => {
-                if (newDir[1]) {
-                    createBackgroundWin('scan-or-rescan', { id: newDir[0].Id });
-                    $('#list-dirs ul').append($(renderer('dir-row', { item: newDir[0] })));
-                } else {
+                db.directory.findOrCreate({
+                    where: {
+                        Name: path.basename(dir[0]),
+                        Path: dir[0]
+                    }
+                }).then(newDir => {
+                    if (newDir[1]) {
+                        createBackgroundWin('scan-or-rescan', { id: newDir[0].Id });
+                        $('#list-dirs ul').append($(renderer('dir-row', { item: newDir[0] })));
+                    } else {
 
-                }
-            }).catch(err => {
-                console.log(err);
-            })
-        }
+                    }
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
+        });
+
     });
 
     $('#list-dirs').on('click', 'li .remove', (e) => {

@@ -8,7 +8,9 @@
     const app = require('electron').remote.app
     const WinDrive = require('win-explorer');
     const db = require(path.join(path.dirname(__dirname), './models'));
-    const { NormalizeName } = require(path.join(path.dirname(__dirname), './utils/StringUtil'));
+    const {
+        NormalizeName
+    } = require(path.join(path.dirname(__dirname), './utils/StringUtil'));
 
     fileFilter = ['mp3', 'ogg', 'm4a', 'aac'];
 
@@ -17,7 +19,7 @@
     var startTime, endTime;
     var currentDir = localStorage.getItem('currentDir');
 
-    Storage.prototype.getObject = function (key) {
+    Storage.prototype.getObject = function(key) {
         var value = this.getItem(key);
         if (value == "undefined") return [];
         return value && JSON.parse(value);
@@ -27,12 +29,12 @@
     var tempFiles = [];
     var dirId;
 
-    ipc.on('remove-dup', function (event, dir, fromWindowId) {
+    ipc.on('remove-dup', function(event, dir, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId);
         log = fromWindow.webContents.send;
         fileFilter.push('wma');
 
-        const removeDuplicate = async (folder, fis) => {
+        const removeDuplicate = async(folder, fis) => {
             var fis = fis.filter((f) => {
                 return f.isDirectory || fileFilter.includes(f.extension.toLocaleLowerCase()) && !f.isHidden
             });
@@ -54,26 +56,28 @@
         let files = WinDrive.ListFilesRO(dir);
         log('error', files);
         removeDuplicate(dir, files).then(() => {
-            window.close();
+            //window.close();
         });
     });
 
     var timer = 0;
 
     let total = 0;
-    const scanOneDir = async (dir) => {
+    const scanOneDir = async(dir) => {
         var fis = WinDrive.ListFilesRO(dir);
         await PopulateDB(dir, fis);
     }
 
-    const PopulateDB = async (folder, files, id) => {
+    const PopulateDB = async(folder, files, id) => {
         let fis = files.filter((f) => {
             return f.isDirectory || fileFilter.includes(f.extension.toLocaleLowerCase()) &&
                 !f.isHidden
         });
 
         if (fis.length === 0) return;
-        let f1 = [{ Id: null }];
+        let f1 = [{
+            Id: null
+        }];
         if (fis.filter((f) => !f.isDirectory && fileFilter.includes(f.extension.toLocaleLowerCase())).length > 0) {
 
             f1 = await db.folder.findOrCreate({
@@ -123,13 +127,17 @@
         createfiles = [];
     }
 
-    ipc.on('scan-or-rescan', function (event, data, fromWindowId) {
+    ipc.on('scan-or-rescan', function(event, data, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId);
         log = fromWindow.webContents.send;
 
-        scan = async () => {
+        scan = async() => {
             timer = new Date();
-            let dir = await db.directory.findOne({ where: { Id: data.id } });
+            let dir = await db.directory.findOne({
+                where: {
+                    Id: data.id
+                }
+            });
             if (data.reScan) {
                 await dir.destroy();
                 dir = await db.directory.create({
@@ -138,42 +146,56 @@
                     Scanning: true
                 });
             }
-            await dir.update({Scanning: true});
+            await dir.update({
+                Scanning: true
+            });
 
             dirId = dir.Id;
             await scanOneDir(dir.Path);
-            await dir.update({ Scanning: false });
-            log('scan', { done: true, Id: data.id, newId: dir.Id, time: (new Date() - timer) });
-            window.close();
+            await dir.update({
+                Scanning: false
+            });
+            log('scan', {
+                done: true,
+                Id: data.id,
+                newId: dir.Id,
+                time: (new Date() - timer)
+            });
+            //window.close();
         }
 
-        scan().catch(err=>{
+        scan().catch(err => {
             console.log(err)
             log('error', err);
         });
     });
 
-    ipc.on('scan-dirs', function (event, data, fromWindowId) {
+    ipc.on('scan-dirs', function(event, data, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId);
         log = fromWindow.webContents.send;
 
-        scanDirs = async () => {
+        scanDirs = async() => {
             let dirs = await db.directory.findAll();
             if (dirs) {
                 for (var f of dirs) {
                     timer = new Date();
                     dirId = f.Id;
                     await scanOneDir(f.Path);
-                    await f.update({ Scanning: false });
-                    log('scan', { done: true, Id: f.Id, time: (new Date() - timer) });
+                    await f.update({
+                        Scanning: false
+                    });
+                    log('scan', {
+                        done: true,
+                        Id: f.Id,
+                        time: (new Date() - timer)
+                    });
                 }
             }
 
-            window.close();
+            // window.close();
         }
         scanDirs();
     });
-
 </script>
 
 </html>

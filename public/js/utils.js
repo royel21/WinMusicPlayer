@@ -1,4 +1,3 @@
-
 const fs = require('fs-extra');
 const path = require('path');
 const local = localStorage;
@@ -14,16 +13,16 @@ createBackgroundWin = (event, data) => {
         width: 1,
         height: 1,
         show: false,
-        webPreferences: { nodeIntegration: true }
-        // width: 1000,
-        // height: 1000,
-        // show: true
+        webPreferences: { nodeIntegration: true },
+        width: 1000,
+        height: 1000,
+        show: true
     });
     win.loadURL(invisPath);
     win.webContents.on('did-finish-load', () => {
         try {
             win.webContents.send(e, d, windowID);
-        } catch (error) { }
+        } catch (error) {}
     });
     win.on('closed', (e) => {
         win = null;
@@ -41,23 +40,23 @@ template = (file, data) => {
     return template;
 }
 
-$.expr[":"].contains = $.expr.createPseudo(function (arg) {
-    return function (elem) {
+$.expr[":"].contains = $.expr.createPseudo(function(arg) {
+    return function(elem) {
         return $(elem).text().trim().toUpperCase().includes(arg.trim().toUpperCase());
     };
 });
 
-$.expr[":"].textequalto = $.expr.createPseudo(function (arg) {
-    return function (elem) {
+$.expr[":"].textequalto = $.expr.createPseudo(function(arg) {
+    return function(elem) {
         return $(elem).text().trim().toUpperCase() === arg.trim().toUpperCase();
     };
 });
 
-Storage.prototype.setObject = function (key, value) {
+Storage.prototype.setObject = function(key, value) {
     this.setItem(key, JSON.stringify(value));
 }
 
-Storage.prototype.getObject = function (key) {
+Storage.prototype.getObject = function(key) {
     var value = this.getItem(key);
     if (value == "undefined") return {};
     return value && JSON.parse(value);
@@ -67,11 +66,11 @@ Storage.prototype.hasObject = (key) => {
     return local.getObject(key) != null && !$.isEmptyObject(local.getObject(key));
 }
 
-Number.prototype.map = function (in_min, in_max, out_min, out_max) {
+Number.prototype.map = function(in_min, in_max, out_min, out_max) {
     return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-Array.prototype.removeById = function (obj) {
+Array.prototype.removeById = function(obj) {
     var i = this.length;
     while (i--) {
         if (this[i] instanceof Object && this[i].Id == obj.Id) {
@@ -80,7 +79,7 @@ Array.prototype.removeById = function (obj) {
     }
 }
 
-Array.prototype.removeBy = function (obj, by) {
+Array.prototype.removeBy = function(obj, by) {
     var i = this.length;
     while (i--) {
         if (this[i] instanceof Object && this[i][by] == obj[by]) {
@@ -93,8 +92,9 @@ Array.prototype.removeBy = function (obj, by) {
 //     return this[Math.floor(Math.random() * this.length)]
 // }
 
-Array.prototype.shuffle = function () {
-    var counter = this.length, temp, index;
+Array.prototype.shuffle = function() {
+    var counter = this.length,
+        temp, index;
 
     // While there are elements in the array
     while (counter > 0) {
@@ -109,7 +109,7 @@ Array.prototype.shuffle = function () {
 };
 
 Object.defineProperty(Array.prototype, "last", {
-    get: function () {
+    get: function() {
         return this[this.length - 1];
     }
 });

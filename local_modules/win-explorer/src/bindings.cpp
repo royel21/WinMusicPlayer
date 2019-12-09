@@ -130,6 +130,7 @@ Napi::Array Win_Explorer::ListDrivesInfo(const Napi::CallbackInfo &info)
 }
 bool checkFilter(std::vector<std::string> list, wchar_t *ex)
 {
+  return false;
 }
 
 //funtion exporter
