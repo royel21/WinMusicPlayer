@@ -14,9 +14,9 @@ createBackgroundWin = (event, data) => {
         height: 1,
         show: false,
         webPreferences: { nodeIntegration: true },
-        width: 1000,
-        height: 1000,
-        show: true
+        // width: 1000,
+        // height: 1000,
+        // show: true
     });
     win.loadURL(invisPath);
     win.webContents.on('did-finish-load', () => {
