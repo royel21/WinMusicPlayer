@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+
+        .panes-container {
+            display: flex;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .left-pane {
+            width: 18%;
+            background: #ccc;
+        }
+
+        .panes-separator {
+            width: 2%;
+            background: red;
+            position: relative;
+            cursor: col-resize;
+        }
+
+        .right-pane {
+            flex: auto;
+            background: #eee;
+        }
+
+        .panes-container,
+        .panes-separator,
+        .left-pane,
+        .right-pane {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="panes-container">
+        <div class="left-pane" id="left-pane">
+            <p>I'm the left pane</p>
+            <ul>
+                <li><a href="#">Item 1</a></li>
+                <li><a href="#">Item 2</a></li>
+                <li><a href="#">Item 3</a></li>
+            </ul>
+        </div>
+        <div class="panes-separator" id="panes-separator"></div>
+        <div class="right-pane" id="right-pane">
+            <p>And I'm the right pane</p>
+            <p><a href="https://github.com/lingtalfi/simpledrag">https://github.com/lingtalfi/simpledrag</a></p>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusantium at cum cupiditate dolorum, eius
+                eum
+                eveniet facilis illum maiores molestiae necessitatibus optio possimus sequi sunt, vel voluptate.
+                Asperiores,
+                voluptate!
+            </p>
+        </div>
+    </div>
+
+
+    <script src="public/script.js"> </script>
+
+</body>
+
+</html>

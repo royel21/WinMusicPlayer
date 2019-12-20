@@ -228,7 +228,7 @@ span i.far:active{
 .search-container{
     display: flex;
     align-items: center;
-    width: 200px;
+    width: 170px;
 }
 
 .search-container span .fa-times-circle{

@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const local = localStorage;
+const { renderer } = require('./modules/renderer');
 
 const BrowserWindow = app.BrowserWindow;
 const invisPath = `file://${path.join(__dirname, 'background/createthumb.html')}`;

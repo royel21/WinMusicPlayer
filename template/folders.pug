@@ -1,5 +1,5 @@
 #items-container.card.text-dark.row
-    #left-panel.col-5.panel
+    #content-a.panel
         .list-titles
             .title
                 span Folders
@@ -11,7 +11,8 @@
                     li.folder.list-group-item.popup-msg(id=item.Id data-title=item.Path tabindex="0")
                         i.fas.fa-folder.mx-2
                         span#item-name= item.Name
-    #right-panel.col-7.panel.files-list
+    #divider
+    #content-b.panel.files-list
         .list-titles
             .title
                 span Content

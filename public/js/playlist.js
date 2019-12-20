@@ -1,4 +1,5 @@
-listConfig = () => {
+var lastEvent;
+const listConfig = () => {
     const getFilesListId = () => $('#sub-content input[type=radio]:checked').attr('id');
     const createList = (e) => showModal('modal-textbox', { modalTitle: 'Create Play List', btnAccept: 'Create' }, async ($modal) => {
         let val = $modal.find('#name').val();
@@ -6,7 +7,7 @@ listConfig = () => {
             try {
                 let list = await db.list.create({ Name: val });
                 if (list) {
-                    $('#content-a li').removeClass('active');
+                    $('#list-a li').removeClass('active');
                     let $row = $(renderer('list-row', { list }));
                     $row.focus();
                     $('#list-a').append($row);
@@ -19,10 +20,9 @@ listConfig = () => {
         }
     });
 
-    let loadFiles = () => {
+    let loadFiles = listId => {
         let id = getFilesListId();
-        let listId = getgetFolderOrPlayListId();
-        let val = $('#list-b').closest('.col-6').find('.search-input').val();
+        let val = $('#list-b').closest('panel').find('.search-input').val();
         let condition = { val: `%${val}%`, Id: listId || '', not: '' };
 
         if (!id.includes('content')) {
@@ -31,20 +31,18 @@ listConfig = () => {
 
         getFileList(condition).then(files => {
             $('#list-b').empty().append(renderer('file-list', { add: !id.includes('content'), files }));
-            $('#content-b #total-items').text(files.length);
+            $('#list-b #total-items').text(files.length);
         });
     }
 
-    $('#sub-content input[type=radio]').change((e) => loadFiles());
+    $('#sub-content input[type=radio]').change((e) => loadFiles($('#list-a .active')[0].id));
 
-    $('#content-b').on('submit', (e) => {
+    $('#list-b').on('submit', (e) => {
         e.preventDefault();
-        loadFiles();
+        loadFiles($('#list-a .active')[0].id);
     });
 
-    $('#content-b').on('dblclick', '#list-b li', (e) => {
-        console.log(e.target);
-        if ($(e.target).hasClass('fas')) return;
+    $('#list-b').on('dblclick', 'li', (e) => {
 
         let id = e.target.closest('li').id;
 
@@ -61,14 +59,36 @@ listConfig = () => {
         }
     });
 
-    $('#content-a').on('click', '.fa-trash-alt', (e) => {
+    $('#list-a').on('click', '.fa-trash-alt', (e) => {
+        e.stopPropagation();
         let li = e.target.closest('li');
         if (li.id) {
             console.log(li.id);
             db.list.destroy({ where: { Id: li.id } }).then((result) => {
                 $(li).fadeOut('fast', () => {
                     li.remove();
-                    loadFiles();
+                    loadFiles($('#list-a .active')[0].id);
+                });
+                console.log(result)
+            });
+        }
+    });
+
+    $('#list-a').on('click', 'li', (e) => {
+        loadFiles(e.target.id);
+    });
+
+     $('#list-b').on('click', '.fa-trash-alt', (e) => {
+        lastEvent = e;
+        e.stopPropagation();
+        let li = e.target.closest('li');
+        let listId = $('#list-a .active')[0].id;
+        if (li.id) {
+            console.log(li.id);
+            db.filelist.destroy({ where: { ListId: listId, FileId: li.id } }).then((result) => {
+                $(li).fadeOut('fast', () => {
+                    li.remove();
+                    loadFiles($('#list-a .active')[0].id);
                 });
                 console.log(result)
             });
@@ -77,16 +97,24 @@ listConfig = () => {
 
     $('#content-b #search-form').on('click', '.clear-search', (e) => {
         e.target.closest('span').previousSibling.value = '';
-        loadFiles();
+        loadFiles($('#list-a .active')[0].id);
+    });
+    
+    $('#content-b #search-form').on('submit', (e) => {
+        e.preventDefault();
+        loadFiles($('#list-a .active')[0].id);
     });
 
     $('#list-b').on('click', '.add-to-list', (e) => {
-        if (getgetFolderOrPlayListId()) {
+        e.stopPropagation();
+        if (getFilesListId()) {
             let li = e.target.closest('li');
-            db.filelist.create({
+            let listId  = $('#list-a .active')[0];
+            console.log(li.id, listId.id);
+            db.filelist.findOrCreate({where: {
                 FileId: li.id,
-                ListId: getgetFolderOrPlayListId()
-            }).then(() => {
+                ListId: listId.id
+            }}).then((file) => {
                 $(li).fadeOut('fast', () => {
                     li.remove();
                 });

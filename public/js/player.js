@@ -8,17 +8,11 @@ const nextAudio = (e) => {
 }
 
 const prevAudio = (e) => {
-    // let index = getIndex(config.currentFile);
-    // if (--index > -1 && index < playList.length) {
-    //     playAudio(playList[index]);
-    // } else {
-    //     playAudio(playList[playList.length - 1]);
-    // }
-    var turnOffDisplay = require('turn-off-display');
-    try {
-        turnOffDisplay();
-    } catch (err) {
-        // handle error
+    let index = getIndex(config.currentFile);
+    if (--index > -1 && index < playList.length) {
+        playAudio(playList[index]);
+    } else {
+        playAudio(playList[playList.length - 1]);
     }
 }
 
