@@ -66,7 +66,7 @@ function createWin() {
         }
     });
 
-    win.openDevTools();
+    //win.openDevTools();
 }
 
 ipcMain.on('console-log', (event, msg) => {

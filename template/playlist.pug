@@ -4,13 +4,15 @@
             .title
                 span Play List
         include ./controls
-        +search(true, lists.length)
-        #list-a.list-container.bg-gradiants
+        +search(true, lists.length, null, null, true)
+        #list-a.list-container.bg-gradiants.play-list
             ul.list-group-flush
                 for item in lists
                     if item.Name === 'Playing'
                         -continue
                     li.plist.list-group-item(id=item.Id tabindex="0")
+                        span#save-list
+                            i.fas.fa-save
                         span.show-form                   
                             i.ml-1.fas.fa-edit
                         span.remove

@@ -116,7 +116,6 @@ const loadView = async(id) => {
         case "tab-list":
             {
                 let lists = await db.list.findAll({
-                    order: ['Name'],
                     where: {
                         Name: {
                             [db.Op.not]: '000RCPLST'
@@ -130,6 +129,7 @@ const loadView = async(id) => {
                 $('#list-b li:first-child').addClass('active');
                 loadScript("playlist.js");
                 listConfig();
+                sdrag();
                 break;
             }
         case "tab-all":
@@ -153,6 +153,7 @@ const loadView = async(id) => {
                 $('#list-b li:first-child').addClass('active');
                 loadScript("folders.js");
                 foldersConfig(listB.rows);
+                sdrag();
                 break;
             }
 
@@ -213,13 +214,44 @@ $(() => {
 $('#container').on('dblclick', '.fas, .far, .fa', (e)=>{
    e.stopPropagation(); 
 });
-/*******************************************************************************/
-var leftPane = document.getElementById('content-a');
-var rightPane = document.getElementById('content-b');
-var paneSep = document.getElementById('divider');
 
-// The script below constrains the target to move horizontally between a left and a right virtual boundaries.
-// - the left limit is positioned at 10% of the screen width
-// - the right limit is positioned at 90% of the screen width
-var leftLimit = 10;
-var rightLimit = 90;
+const savelist = async (id) => {
+    let list = await db.list.findByPk(id);
+
+    var result = await dialog.showSaveDialog(mainWindow, {
+        title: 'Save List',
+        properties: ['createDirectory', 'showHiddenFiles'],
+        defaultPath: path.join(os.homedir(), 'Music', 'regae.json')
+    });
+
+    if (!result.canceled) {
+        let dir = result.filePath;
+        let songs = (await list.getFiles()).map(s=>s.Name);
+        let tempPlayList = {
+            name: list.Name, songs: songs 
+        }
+        fs.writeJSONSync(dir, tempPlayList);
+    }
+}
+
+const openList =async () =>{
+
+    var result = await dialog.showOpenDialog(mainWindow, {
+        title: 'Open List',
+        properties: ['openFile', 'showHiddenFiles', 'multiSelections'],
+        defaultPath: path.join(os.homedir(), 'Music')
+    });
+
+     if (!result.canceled) {
+        for(let f of result.filePaths){
+            let tempPlayList =  fs.readJSONSync(f);
+            let list = await db.list.findOrCreate({where: {Name: tempPlayList.name}});
+            let files = await db.file.findAll({where: {Name: tempPlayList.songs }});
+            list[0].setFiles(files);
+            console.log(files)
+        }
+        loadView($('#nav-menu input[type=radio]:checked')[0].id);
+     }
+
+    //let tempPlayList =  fs.readJSONSync(dir);
+}

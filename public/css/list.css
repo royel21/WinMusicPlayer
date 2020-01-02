@@ -1,6 +1,8 @@
 .list-container{
     overflow: auto;
     height: calc(100% - 49px);
+    max-width: 100%;
+    width: 100%;
 }
 
 .list-container::-webkit-scrollbar{
@@ -8,6 +10,7 @@
 }
 
 #divider{
+    display: inline-block;
     height: 100%;
     width: 5px;
     background-color: rgb(52, 58, 64);
@@ -64,7 +67,7 @@
 }
 
 #items-container{
-    flex-direction: row;
+    display: block;
     border: 2px solid black;
     margin: 0;
     height: calc(100% - 87px);
@@ -114,12 +117,13 @@
 
 
 #container .panel{
+    display: inline-block;
     height: 100%;
     padding: 0;
 }
 
-#content-a{width: 50%;max-width: 50%;min-width: 310px;}
-#content-b{flex-grow: 1;max-width: 49%;}
+#content-a{width: 50%;min-width: 350px;}
+#content-b{min-width: 250px;width: calc(50% - 5px);}
 
 .content-list .list-group-item{
     cursor: pointer;
@@ -216,6 +220,10 @@
 #badge-container,
 #items-container .btn{
     align-self: center;
+}
+
+#open-list{
+    padding: 10px;
 }
 
 #modal .file-form{

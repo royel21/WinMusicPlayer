@@ -144,28 +144,33 @@ $('#container').on('keydown', 'ul li', (e) => {
                 event.preventDefault();
                 break;
             }
-         case 13:
+        case 13:
             {
-                if($(e.target).hasClass('file')){
+                if ($(e.target).hasClass('file')) {
 
                     playAudio(e.target.closest('li').id);
-                    
-                }else if($(e.target).hasClass('folder')){
-                       loadFolderontent(e.target.closest('li').id);
-                }else{
+
+                } else if ($(e.target).hasClass('folder')) {
+                    loadFolderontent(e.target.closest('li').id);
+                } else {
 
                 }
                 e.stopPropagation();
                 break;
             }
+        case 123:
+            {
+                mainWindow.toggleDevTools();
+                break;
+            }
     }
 });
 
-$('#container').on('dblclick', '.fa, .fas, far', (e)=>{
-     e.stopPropagation();
+$('#container').on('dblclick', '.fa, .fas, far', (e) => {
+    e.stopPropagation();
 });
 
-$('#container').on('dblclick', '.file', (e)=> {    
-     playAudio(e.target.closest('li').id);
+$('#container').on('dblclick', '.file', (e) => {
+    playAudio(e.target.closest('li').id);
 });
 

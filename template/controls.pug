@@ -1,6 +1,9 @@
-mixin search(buttonTest, total, search, pages)
+mixin search(buttonTest, total, search, pages, isList)
     form#search-form
         .controls
+            if isList
+                span#open-list.btn.btn-primary
+                        i.far.fa-folder-open
             if buttonTest
                 span.btn.btn-primary.show-form Add 
                     i.fas.fa-plus-circle

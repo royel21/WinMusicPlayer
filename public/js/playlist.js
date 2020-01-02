@@ -1,10 +1,10 @@
 var lastEvent;
 const listConfig = () => {
-    const getFilesListId = () => $('#sub-content input[type=radio]:checked').attr('id');
-    
+    const getTabId = () => $('#sub-content input[type=radio]:checked').attr('id');
+
     const getListId = () => getEl('#list-a .active') ? getEl('#list-a .active').id : "";
 
-    const createList = (e) => showModal('modal-textbox', { modalTitle: 'Create Play List', btnAccept: 'Create' }, async(
+    const createList = (e) => showModal('modal-textbox', { modalTitle: 'Create Play List', btnAccept: 'Create' }, async (
         $modal) => {
         let val = $modal.find('#name').val();
         if (val.length > 0) {
@@ -14,7 +14,7 @@ const listConfig = () => {
                     $('#list-a li').removeClass('active');
                     let $row = $(renderer('list-row', { list }));
                     $row.focus();
-                    $('#list-a').append($row);
+                    $('#list-a ul').append($row);
                 }
             } catch (error) {
                 console.log(error)
@@ -25,20 +25,23 @@ const listConfig = () => {
     });
 
     let loadFiles = listId => {
-        let id = getFilesListId();
+        let tabId = getTabId();
         let val = getEl('#content-b .search-input').value;
         let condition = { val: `%${val}%`, Id: listId || '', not: '' };
 
-        if (!id.includes('content')) {
+        if (!tabId.includes('content')) {
             condition.not = 'not';
         }
 
         getFileList(condition).then(files => {
-            $('#list-b').empty().append(renderer('file-list', { add: !id.includes('content'), files }));
+            $('#list-b').empty().append(renderer('file-list', { add: !tabId.includes('content'), files }));
             getEl('#content-b #total-items').textContent = files.length;
         });
     }
-
+    $('#list-a li').click((e) => {
+        let Id = e.target.closest('li').id;
+        loadFiles(Id);
+    });
     $('#sub-content input[type=radio]').change((e) => loadFiles(getListId()));
 
     $('#content-b').on('submit', (e) => {
@@ -50,7 +53,7 @@ const listConfig = () => {
 
         let id = e.target.closest('li').id;
 
-        if (getFilesListId().includes('content')) {
+        if (getTabId().includes('content')) {
             db.list.findOne({
                 where: { Id: getFolderOrPlayListId() }
             }).then(list => {
@@ -63,7 +66,7 @@ const listConfig = () => {
         }
     });
 
-    $('#content-b').on('click', '.fa-trash-alt', (e) => {
+    $('#content-a').on('click', '.fa-trash-alt', (e) => {
         e.stopPropagation();
         let li = e.target.closest('li');
         if (li.id) {
@@ -93,7 +96,7 @@ const listConfig = () => {
                 console.log(result)
             });
         }
-    })
+    });
 
     $('#content-b #search-form').on('click', '.clear-search', (e) => {
         e.target.closest('span').previousSibling.value = '';
@@ -107,7 +110,7 @@ const listConfig = () => {
 
     $('#content-b').on('click', '.add-to-list', (e) => {
         e.stopPropagation();
-        if (getFilesListId()) {
+        if (getTabId()) {
             let li = e.target.closest('li');
             let listId = $('#list-a .active')[0];
             console.log(li.id, listId.id);
@@ -126,5 +129,32 @@ const listConfig = () => {
         }
     });
 
-    $('.show-form').click(createList);
+    $('.controls .show-form').click(createList);
+
+    $('#list-a .show-form').click((e) => {
+        let li = e.target.closest('li');
+        db.list.findByPk(li.id).then(list => {
+            if (list) {
+                showModal('modal-textbox', {
+                    modalTitle: 'Edit List',
+                    btnAccept: 'Save',
+                    name: li.textContent.trim()
+                }, async ($modal) => {
+                    let val = $modal.find('#name').val();
+                    if (val.length > 0) {
+                        
+                        list.update({Name: val});
+                        li.querySelector('#item-name').textContent = val;
+                    }
+                });
+            }
+        });
+    });
+
+    $('#list-a .fa-save').click((e) => {
+
+        savelist(e.target.closest('li').id);
+    });
+
+    $('#open-list').click(openList);
 }
