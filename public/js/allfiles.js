@@ -1,28 +1,37 @@
 const loadAllFilesConfig = (play) => {
-    $('#files-list #all-files').on('dblclick', 'li', play);
+    $('#items-container').on('dblclick', '.file', (e)=> {    
+         let filter = getEl('.search-input').value;    
+         loadAllFiles(1, filter, true);
+    });
 
-    $('#files-list #all-files').on('click', '.fa-trash-alt', deleteFile);
+    $('#items-container #all-files').on('click', '.fa-trash-alt', deleteFile);
 
-    $('#files-list #search-form').on('click', '.clear-search', (e) => {
+    $('#items-container #search-form').on('click', '.clear-search', (e) => {
         e.target.closest('span').previousSibling.value = '';
-        loadView(1, '');
+        loadAllFiles(1, "").then(()=>{
+             getEl('.search-input').focus();
+        });
     });
 
-    $('#files-list #search-form').submit((e) => {
-        e.preventDefault();
-        let filter = $('.search-input').val();
-        loadView(1, filter);
+    $('#items-container .search-input').on('input', (e) => {
+        let filter = e.target.value;
+        console.log(filter)
+        loadAllFiles(1, filter).then(()=>{
+             let search = getEl('input[type=text]');
+             search.focus();
+             search.setSelectionRange(filter.length, filter.length);
+        });
     });
 
-    $('#files-list #items-container').on('click', '.page-link', (e) => {
-        let filter = $('.search-input').val();
+    $('#items-container').on('click', '.page-link', (e) => {
+        let filter = getEl('.search-input').value;
         let page = parseInt(e.target.closest('span').dataset.page);
-        loadView(page, filter);
+        loadAllFiles(page, filter);
     });
 
-    $('#files-list #select-page').change(e => {
-        let filter = $('.search-input').val();
-        loadView(parseInt(e.target.value), filter);
+    $('#items-container #select-page').change(e => {
+        let filter = getEl('.search-input').value;
+        loadAllFiles(parseInt(e.target.value), filter);
     });
 
     const selectLast = () => {

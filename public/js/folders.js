@@ -1,13 +1,14 @@
-
 foldersConfig = (loadedFiles) => {
     let tempFiles = loadedFiles;
 
-    loadFolderontent = async (Id) => {
+    loadFolderontent = async(Id) => {
         let filter = $('#right-panel .search-input').val();
 
         let files = await db.file.findAll({
             order: ['NameNormalize'],
-            where: { [db.Op.and]: [{ FolderId: Id || '' }, { Name: { [db.Op.like]: '%' + (filter || '') + '%' } }] },
+            where: {
+                [db.Op.and]: [{ FolderId: Id || '' }, { Name: {
+                        [db.Op.like]: '%' + (filter || '') + '%' } }] },
             attribute: ['Id', 'Name', 'NameNormalize']
         });
 
@@ -34,6 +35,6 @@ foldersConfig = (loadedFiles) => {
     });
 
     $('#list-b').on('dblclick', 'li', (e) => {
-        loadPlayList(tempFiles.map(f => f.Id));
+        //loadPlayList(tempFiles.map(f => f.Id));
     });
 }

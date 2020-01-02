@@ -161,10 +161,11 @@ $('#container').on('keydown', 'ul li', (e) => {
     }
 });
 
+$('#container').on('dblclick', '.fa, .fas, far', (e)=>{
+     e.stopPropagation();
+});
 
-$('#container').on('dblclick', '.files-list li', (e)=> {
-    if($(e.target).hasClass('fa, fas, far')) return;
-    
-    playAudio(e.target.closest('li').id);
+$('#container').on('dblclick', '.file', (e)=> {    
+     playAudio(e.target.closest('li').id);
 });
 
