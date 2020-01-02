@@ -8,7 +8,7 @@ function sdrag(onDrag, onStop, direction) {
     function move(e) {
 
         var fix = {};
-        onDrag && onDrag(el, e.pageX, startX, e.pageY, startY, fix);
+        onDrag && onDrag(e.pageX, startX, e.pageY, startY, fix);
         if ('vertical' !== direction) {
             var pageX = ('pageX' in fix) ? fix.pageX : e.pageX;
             if ('startX' in fix) {
@@ -63,7 +63,7 @@ var leftLimit = 10;
 var rightLimit = 90;
 
 
-paneSep.sdrag(function (pageX, fix) {
+paneSep.sdrag(function (pageX, startX, pageY, startY, fix) {
 
     fix.skipX = true;
 
