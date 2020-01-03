@@ -63,12 +63,12 @@ const loadAllFiles = async(page, search, noReload) => {
     });
 
     let totalPages = Math.ceil(items.count / itemPerPage);
-    if(!noReload){
+    if (!noReload) {
         $container.empty().append(renderer('allfiles', { files: items, pages: { currentPage: page, totalPages, search } }));
         loadAllFilesConfig();
-    }else
+    } else
         loadPlayList(items.rows.map(f => f.Id));
-    
+
 }
 
 loadPlayListView = async(page, search) => {
@@ -211,11 +211,11 @@ $(() => {
         });
     });
 });
-$('#container').on('dblclick', '.fas, .far, .fa', (e)=>{
-   e.stopPropagation(); 
+$('#container').on('dblclick', '.fas, .far, .fa', (e) => {
+    e.stopPropagation();
 });
 
-const savelist = async (id) => {
+const savelist = async(id) => {
     let list = await db.list.findByPk(id);
 
     var result = await dialog.showSaveDialog(mainWindow, {
@@ -226,32 +226,39 @@ const savelist = async (id) => {
 
     if (!result.canceled) {
         let dir = result.filePath;
-        let songs = (await list.getFiles()).map(s=>s.Name);
+        let songs = (await list.getFiles()).map(s => s.Name);
         let tempPlayList = {
-            name: list.Name, songs: songs 
+            name: list.Name,
+            songs: songs
         }
         fs.writeJSONSync(dir, tempPlayList);
     }
 }
 
-const openList =async () =>{
+const openList = async() => {
 
     var result = await dialog.showOpenDialog(mainWindow, {
         title: 'Open List',
         properties: ['openFile', 'showHiddenFiles', 'multiSelections'],
-        defaultPath: path.join(os.homedir(), 'Music')
+        defaultPath: path.join(os.homedir(), 'Music'),
+        filters: [{
+                name: "Play List",
+                extensions: ['json']
+            },
+            {
+                name: 'All Files',
+                extensions: ['*']
+            }
+        ]
     });
 
-     if (!result.canceled) {
-        for(let f of result.filePaths){
-            let tempPlayList =  fs.readJSONSync(f);
-            let list = await db.list.findOrCreate({where: {Name: tempPlayList.name}});
-            let files = await db.file.findAll({where: {Name: tempPlayList.songs }});
+    if (!result.canceled) {
+        for (let f of result.filePaths) {
+            let tempPlayList = fs.readJSONSync(f);
+            let list = await db.list.findOrCreate({ where: { Name: tempPlayList.name } });
+            let files = await db.file.findAll({ where: { Name: tempPlayList.songs } });
             list[0].setFiles(files);
-            console.log(files)
         }
         loadView($('#nav-menu input[type=radio]:checked')[0].id);
-     }
-
-    //let tempPlayList =  fs.readJSONSync(dir);
+    }
 }

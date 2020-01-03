@@ -38,7 +38,7 @@ Slider.onPreview = (value) => {
     $('#v-current-time').text(formatTime(Math.floor(value)));
 }
 
-player.onloadedmetadata = function (e) {
+player.onloadedmetadata = function(e) {
     Slider.min = 0;
     Slider.max = player.duration;
     Slider.value = 0;
@@ -58,7 +58,7 @@ volcontrol.oninput = (e) => {
 const pauseOrPlay = () => {
     var playPause = 'Pausar';
     if (player.paused) {
-        player.play().catch(e => { });
+        player.play().catch(e => {});
     } else {
         player.pause();
         playPause = 'Reproducir';
@@ -86,7 +86,7 @@ player.ontimeupdate = (e) => {
     }
 }
 
-player.onvolumechange = function (e) {
+player.onvolumechange = function(e) {
     if (update) {
         volcontrol.value = config.volume = player.volume;
         volcontrol.setAttribute('value', player.volume);
@@ -102,23 +102,23 @@ player.onended = nextAudio;
 
 // *******************Play audio file*************************************
 
-const playAudio = async (Id, prev) => {
-    config.currentFile.Id = Id;
-    selectListRow($('#' + Id));
-    if (Id) {
-        db.file.findOne({ where: { Id }, include: { model: db.folder } }).then(file => {
-            if (file) {
-                player.src = path.join(file.Folder.Path, file.Name);
-            }
-        });
+const playAudio = async(Id, prev) => {
+        config.currentFile.Id = Id;
+        selectListRow($('#' + Id));
+        if (Id) {
+            db.file.findOne({ where: { Id }, include: { model: db.folder } }).then(file => {
+                if (file) {
+                    player.src = path.join(file.Folder.Path, file.Name);
+                }
+            });
+        }
     }
-}
-/**************************************************************************/
+    /**************************************************************************/
 
 $('#v-next').click(nextAudio);
 $('#v-prev').click(prevAudio);
 
 btnShuffler.onchange = (e) => {
     config.shuffle = btnShuffler.checked;
-    // loadPlayList(OriginalPlayList);
+    loadPlayList(OriginalPlayList);
 }

@@ -1,15 +1,14 @@
-
 const getFolderOrPlayListId = () => $('#list-a .active').attr('id');
 const isView = (id) => $('input[name="tabs"]:checked').attr('id').includes(id);
 
 const loadPlayList = (files) => {
-    OriginalPlayList = files;
-    playList = [...OriginalPlayList];
-    if (btnShuffler.checked) {
-        playList.shuffle();
+        OriginalPlayList = files;
+        playList = [...OriginalPlayList];
+        if (btnShuffler.checked) {
+            playList.shuffle();
+        }
     }
-}
-// hide modal
+    // hide modal
 const hideModal = () => {
     $('#modal').fadeOut('slow');
     $('#modal-container').fadeOut('slow', (e) => {
@@ -57,7 +56,7 @@ const showModal = (modal, data, callback) => {
 const deleteFile = (e) => {
     let li = e.target.closest('li');
     if (isView('folder') || isView('all')) {
-        showModal('delete-modal', { file: $(li).find('#item-name').text() }, async () => {
+        showModal('delete-modal', { file: $(li).find('#item-name').text() }, async() => {
             try {
                 if (li) {
                     let file = await db.file.findOne({ where: { Id: li.id }, include: { model: db.folder } });
@@ -89,7 +88,7 @@ const deleteFile = (e) => {
 $('body').on('click', '.files-list .fa-edit', (e) => {
     let li = e.target.closest('li');
     let $oldName = $(li).find('#item-name');
-    showModal('modal-textbox', { modalTitle: "Rename File", btnAccept: "Rename", name: $oldName.text() }, async ($modal) => {
+    showModal('modal-textbox', { modalTitle: "Rename File", btnAccept: "Rename", name: $oldName.text() }, async($modal) => {
         let $name = $modal.find('#name');
         try {
             if (li) {
@@ -174,3 +173,8 @@ $('#container').on('dblclick', '.file', (e) => {
     playAudio(e.target.closest('li').id);
 });
 
+document.body.onkeydown = (e) => {
+    if (e.keyCode == 123) {
+        mainWindow.toggleDevTools();
+    }
+}
