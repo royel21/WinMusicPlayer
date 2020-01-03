@@ -1,6 +1,5 @@
 playingConfig = () => {
-    $('#all-files').on('dblclick', 'li', play);
-
+    
     $('#search-form').on('click', '.clear-search', (e) => {
         e.target.closest('span').previousSibling.value = '';
         loadPlayListView(1, '');
@@ -8,8 +7,16 @@ playingConfig = () => {
 
     $('#search-form').submit((e) => {
         e.preventDefault();
-        let filter = $('.search-input').val();
-        loadPlayListView(1, filter);
+    });
+
+    $('#items-container .search-input').on('input', (e) => {
+        let filter = e.target.value;
+        
+         loadPlayListView(1, filter).then(()=>{
+             let search = getEl('input[type=text]');
+             search.focus();
+             search.setSelectionRange(filter.length, filter.length);
+        });
     });
 
     $('#items-container').on('click', '.page-link', (e) => {
@@ -18,12 +25,5 @@ playingConfig = () => {
         loadPlayListView(page, filter);
     });
 
-    selectLast = () => {
-        let id = config.currentFile.Id;
-
-        if (!$('#' + id)[0]) id = $('li').attr('id');
-        selectListRow($('#' + id));
-    }
-
-    selectLast();
+    selectListRow($('#' + config.currentFile.Id));
 }

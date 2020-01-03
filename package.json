@@ -30,6 +30,8 @@
   },
   "homepage": "https://github.com/royel21/WinMusicPlayer#readme",
   "dependencies": {
+    "crc": "^3.8.0",
+    "crc-32": "^1.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "fs-extra": "^7.0.1",
     "id3js": "^1.1.3",

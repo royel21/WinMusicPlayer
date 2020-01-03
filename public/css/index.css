@@ -99,8 +99,7 @@ body,
 .content{
     align-items: center;
     position: relative;
-    min-height: 100%;
-    height: 100%;
+    height: calc(100% - 97px);
     padding: 0px;
 }
 

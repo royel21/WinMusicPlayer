@@ -1,40 +1,39 @@
-#items-container.card.text-dark.row
-    #content-a.panel
-        .list-titles
-            .title
-                span Play List
-        include ./controls
-        +search(true, lists.length, null, null, true)
-        #list-a.list-container.bg-gradiants.play-list
-            ul.list-group-flush
-                for item in lists
-                    if item.Name === 'Playing'
-                        -continue
-                    li.plist.list-group-item(id=item.Id tabindex="0")
-                        span#save-list
-                            i.fas.fa-save
-                        span.show-form                   
-                            i.ml-1.fas.fa-edit
-                        span.remove
-                            i.mx-1.fas.fa-trash-alt
-                        span#item-name= item.Name
-    #divider
-    #content-b.panel.files-list
-        .list-titles
-            #sub-content.nav.nav-tabs
-                .nav-item
-                    input#tab-folder-content(type="radio" name="tabs-list" checked)
-                    label.nav-link(for="tab-folder-content") List Content
-                .nav-item
-                    input#tab-audio-all(type="radio" name="tabs-list")
-                    label.nav-link(for="tab-audio-all") All Files
-        include ./controls
-        +search(false, files.length)
-        #list-b.list-container.bg-gradiants
-            ul.list-group-flush
-                for item in files
-                    li.file.list-group-item(id=item.Id tabindex="0")
-                        span.v-remove.text-danger
-                            i.fas.fa-trash-alt
-                        span#item-name= item.Name
-                
+#content-a.panel
+    .list-titles
+        .title
+            span Play List
+    include ./controls
+    +search(true, lists.length, null, null, true)
+    #list-a.list-container.bg-gradiants.play-list
+        ul.list-group-flush
+            for item in lists
+                if item.Name === 'Playing'
+                    -continue
+                li.plist.list-group-item(id=item.Id tabindex="0")
+                    span#save-list
+                        i.fas.fa-save
+                    span.show-form                   
+                        i.ml-1.fas.fa-edit
+                    span.remove
+                        i.mx-1.fas.fa-trash-alt
+                    span#item-name= item.Name
+#divider
+#content-b.panel.files-list
+    .list-titles
+        #sub-content.nav.nav-tabs
+            .nav-item
+                input#tab-folder-content(type="radio" name="tabs-list" checked)
+                label.nav-link(for="tab-folder-content") List Content
+            .nav-item
+                input#tab-audio-all(type="radio" name="tabs-list")
+                label.nav-link(for="tab-audio-all") All Files
+    include ./controls
+    +search(false, files.length)
+    #list-b.list-container.bg-gradiants
+        ul.list-group-flush
+            for item in files
+                li.file.list-group-item(id=item.Id tabindex="0")
+                    span.v-remove.text-danger
+                        i.fas.fa-trash-alt
+                    span#item-name= item.Name
+            

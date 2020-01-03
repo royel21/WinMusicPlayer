@@ -24,6 +24,10 @@ var config = {
     currentFile: { Id: 0, Name: "", current: 0 }
 }
 
+const getTabIndex = (tab) => {
+    return [...document.querySelectorAll('.tab-content')].indexOf(tab);
+}
+
 const getFileList = async(data) => {
     return await db.sqlze.query(
         `Select Id, Name, NameNormalize 
@@ -64,7 +68,8 @@ const loadAllFiles = async(page, search, noReload) => {
 
     let totalPages = Math.ceil(items.count / itemPerPage);
     if (!noReload) {
-        $container.empty().append(renderer('allfiles', { files: items, pages: { currentPage: page, totalPages, search } }));
+        $('#allfiles').empty().append(renderer('allfiles', { files: items, pages: { currentPage: page, totalPages, search } }));
+         animateTab($('#allfiles'));
         loadAllFilesConfig();
     } else
         loadPlayList(items.rows.map(f => f.Id));
@@ -94,15 +99,43 @@ loadPlayListView = async(page, search) => {
 
     pages.totalPages = Math.ceil(count / itemPerPage);
 
-    $container.empty().append(renderer('allfiles', { files, pages }));
-
-    const play = (e) => {
-        let li = e.target.closest('li');
-        selectListRow($(li));
-    }
-
-    loadAllFilesConfig(play);
+    $('#playing').empty().append(renderer('allfiles', { files, pages }));
+    if(booting){
+        booting = false;
+    }else
+        animateTab($('#playing'));
+    playingConfig();
 }
+
+const animateTab = ($nextTab, direction) =>{
+    let width = window.innerWidth;
+    let indexFrom = getTabIndex($('.current-tab')[0]);
+    let indexTo = getTabIndex($nextTab[0]);
+
+
+    if(indexFrom < indexTo){
+        width *= -1;
+        $nextTab.css({left: -width});
+    }else{
+        $nextTab.css({left: width});
+    }
+    
+    $('.current-tab').animate({ left: width }, {
+        duration: 300,
+        always: function () {
+             $('.current-tab').removeClass('current-tab').empty().css({display: 'none'});
+        }
+    });
+
+    $nextTab.css({display: 'block'});
+    $nextTab.animate({ left: 0 }, {
+        duration: 300,
+        always: function () {
+             $nextTab.addClass('current-tab');
+        }
+    });
+}
+let booting = true;
 
 const loadView = async(id) => {
 
@@ -124,10 +157,10 @@ const loadView = async(id) => {
                 });
 
                 let files = lists[0] ? await lists[0].getFiles() : [];
-                $container.empty().append(renderer('playlist', { lists, files }));
+                $('#playlist').empty().append(renderer('playlist', { lists, files }));
                 $('#list-a li:first-child').addClass('active');
                 $('#list-b li:first-child').addClass('active');
-                loadScript("playlist.js");
+                animateTab($('#playlist'));
                 listConfig();
                 sdrag();
                 break;
@@ -148,10 +181,10 @@ const loadView = async(id) => {
                     listB.rows = await listA.rows[0].getFiles({ order: ['NameNormalize'] });
                 }
 
-                $container.empty().append(renderer('folders', { listA, listB }));
+                $('#folders').empty().append(renderer('folders', { listA, listB }));
                 $('#list-a li:first-child').addClass('active');
                 $('#list-b li:first-child').addClass('active');
-                loadScript("folders.js");
+                animateTab($('#folders'));
                 foldersConfig(listB.rows);
                 sdrag();
                 break;
@@ -159,16 +192,15 @@ const loadView = async(id) => {
 
         case "tab-shedules":
             {
-                $container.empty().append(renderer('tasks', {}));
-                loadScript("task.js");
-                loadTasks();
+                $('#task').empty().append(renderer('tasks', {}));
+                animateTab($('#task'));
                 break;
             }
         case "tab-directories":
             {
                 let dirs = await db.directory.findAll({ order: ['Name'] });
-                $container.empty().append(renderer('directories', { directories: dirs }));
-                loadScript("directories.js");
+                $('#directories').empty().append(renderer('directories', { directories: dirs }));
+                animateTab($('#directories'));
                 loadDirectoryConfig();
                 break;
             }

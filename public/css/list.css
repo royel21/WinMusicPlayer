@@ -54,29 +54,37 @@
 }
 
 #container{
-    flex-direction: row;
+    position: relative;
     padding: 5px 5px;
     user-select: none;
-    height: calc(100% - 8px);
+    height: 100%;
     overflow-y: hidden;
     background-color: rgba(27, 14, 209, 0.904);
+    overflow: hidden;
 }
 
 #container > h2{
     margin: 0;
 }
 
-#items-container{
-    display: block;
+.tab-content{
+    position: absolute;
+    display: none;
     border: 2px solid black;
     margin: 0;
-    height: calc(100% - 87px);
+    height: 98.5%;
     border-radius: .25rem;
-    padding: 1px 0;
+    padding: 1px 0px;
     background-color: black;
     width: 100%;
+    z-index: 99;
+    /* transition: .3s all; */
+    left: -100%;
 } 
-
+.current-tab{
+    display: block;
+    left: 0px;
+}
 
 .list-titles{
     position: relative;
@@ -154,7 +162,7 @@
     cursor: pointer;
 }
 
-#items-container .list-group-item{
+.tab-content .list-group-item{
     padding: 0.39rem 0.2rem;
     white-space: nowrap;
     overflow: hidden;
@@ -164,11 +172,11 @@
     border: initial;
 }
 
-#items-container .list-group-flush .list-group-item:not(.active):hover{
+.tab-content .list-group-flush .list-group-item:not(.active):hover{
     background-color: rgba(255,255,255, 0.1);
 }
 
-#items-container li.active{
+.tab-content li.active{
      background-color: rgba(00, 123, 255, 0.65);
 }
 
@@ -176,25 +184,25 @@
     white-space: nowrap;
 }
 
-#items-container .list-group-item span i{
+.tab-content .list-group-item span i{
     margin: 0 6px;
     font-size: 1.4rem;
 }
 
-#items-container .list-group-item:first-child{
+.tab-content .list-group-item:first-child{
     border-radius: 0;
 }
 
-#items-container .list-group-item:last-child{
+.tab-content .list-group-item:last-child{
     border-bottom: 1px solid rgba(0,0,0,.125);
 }
 
-#items-container .list-group-item .fa-edit,
-#items-container .list-group-item .fa-sync{
+.tab-content .list-group-item .fa-edit,
+.tab-content .list-group-item .fa-sync{
     color: #007bff;
 }
 
-#items-container .active .fa-sync{
+.tab-content .active .fa-sync{
     color: white;
 }
 
@@ -218,7 +226,7 @@
 }
 
 #badge-container,
-#items-container .btn{
+.tab-content .btn{
     align-self: center;
 }
 
@@ -234,9 +242,9 @@
     display: none;
 }
 
-#items-container .list-group-item .fa:active,
-#items-container .list-group-item .far:active,
-#items-container .list-group-item .fas:active{
+.tab-content .list-group-item .fa:active,
+.tab-content .list-group-item .far:active,
+.tab-content .list-group-item .fas:active{
     transform: scale(1.1);    
 }
 

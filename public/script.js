@@ -1,3 +1,4 @@
+const crc32 = require('crc')
 var leftPane;
 var rightPane;
 var divider;

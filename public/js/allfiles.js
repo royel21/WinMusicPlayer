@@ -15,7 +15,7 @@ const loadAllFilesConfig = (play) => {
 
     $('#items-container .search-input').on('input', (e) => {
         let filter = e.target.value;
-        console.log(filter)
+        
         loadAllFiles(1, filter).then(()=>{
              let search = getEl('input[type=text]');
              search.focus();
@@ -33,13 +33,11 @@ const loadAllFilesConfig = (play) => {
         let filter = getEl('.search-input').value;
         loadAllFiles(parseInt(e.target.value), filter);
     });
+    
 
-    const selectLast = () => {
-        let id = config.currentFile.Id;
+    $('#search-form').submit((e) => {
+        e.preventDefault();
+    });
 
-        if (!$('#' + id)[0]) id = $('li').attr('id');
-        selectListRow($('#' + id));
-    }
-
-    selectLast();
+    selectListRow($('#' + config.currentFile.Id));
 }

@@ -19,7 +19,7 @@
     var startTime, endTime;
     var currentDir = localStorage.getItem('currentDir');
 
-    Storage.prototype.getObject = function(key) {
+    Storage.prototype.getObject = function (key) {
         var value = this.getItem(key);
         if (value == "undefined") return [];
         return value && JSON.parse(value);
@@ -29,12 +29,12 @@
     var tempFiles = [];
     var dirId;
 
-    ipc.on('remove-dup', function(event, dir, fromWindowId) {
+    ipc.on('remove-dup', function (event, dir, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId);
         log = fromWindow.webContents.send;
         fileFilter.push('wma');
 
-        const removeDuplicate = async(folder, fis) => {
+        const removeDuplicate = async (folder, fis) => {
             var fis = fis.filter((f) => {
                 return f.isDirectory || fileFilter.includes(f.extension.toLocaleLowerCase()) && !f.isHidden
             });
@@ -63,12 +63,12 @@
     var timer = 0;
 
     let total = 0;
-    const scanOneDir = async(dir) => {
+    const scanOneDir = async (dir) => {
         var fis = WinDrive.ListFilesRO(dir);
         await PopulateDB(dir, fis);
     }
 
-    const PopulateDB = async(folder, files, id) => {
+    const PopulateDB = async (folder, files, id) => {
         let fis = files.filter((f) => {
             return f.isDirectory || fileFilter.includes(f.extension.toLocaleLowerCase()) &&
                 !f.isHidden
@@ -87,6 +87,16 @@
                     DirectoryId: dirId
                 }
             });
+            
+            if (!f1[1]) {
+                let files = await f1[0].getFiles();
+
+                for (let f of files) {
+                    if (!fs.existsSync(path.join(folder, f.Name))) await f.destroy();
+                }
+                
+                if((await f1[0].getFiles()).length == 0) await f1[0].destroy();
+            }
         }
 
         var createfiles = [];
@@ -127,25 +137,25 @@
         createfiles = [];
     }
 
-    ipc.on('scan-or-rescan', function(event, data, fromWindowId) {
+    ipc.on('scan-or-rescan', function (event, data, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId);
         log = fromWindow.webContents.send;
 
-        scan = async() => {
+        scan = async () => {
             timer = new Date();
             let dir = await db.directory.findOne({
                 where: {
                     Id: data.id
                 }
             });
-            if (data.reScan) {
-                await dir.destroy();
-                dir = await db.directory.create({
-                    Name: dir.Name,
-                    Path: dir.Path,
-                    Scanning: true
-                });
-            }
+            // if (data.reScan) {
+            //     await dir.destroy();
+            //     dir = await db.directory.create({
+            //         Name: dir.Name,
+            //         Path: dir.Path,
+            //         Scanning: true
+            //     });
+            // }
             await dir.update({
                 Scanning: true
             });
@@ -161,7 +171,7 @@
                 newId: dir.Id,
                 time: (new Date() - timer)
             });
-            window.close();
+            // window.close();
         }
 
         scan().catch(err => {
@@ -170,11 +180,11 @@
         });
     });
 
-    ipc.on('scan-dirs', function(event, data, fromWindowId) {
+    ipc.on('scan-dirs', function (event, data, fromWindowId) {
         let fromWindow = BrowserWindow.fromId(fromWindowId);
         log = fromWindow.webContents.send;
 
-        scanDirs = async() => {
+        scanDirs = async () => {
             let dirs = await db.directory.findAll();
             if (dirs) {
                 for (var f of dirs) {
