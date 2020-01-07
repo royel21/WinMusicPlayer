@@ -107,19 +107,17 @@ loadPlayListView = async(page, search) => {
     playingConfig();
 }
 
-const animateTab = ($nextTab, direction) =>{
+const animateTab = async ($nextTab, direction) =>{
     let width = window.innerWidth;
     let indexFrom = getTabIndex($('.current-tab')[0]);
     let indexTo = getTabIndex($nextTab[0]);
 
 
-    if(indexFrom < indexTo){
+    if(indexFrom > indexTo){
         width *= -1;
-        $nextTab.css({left: -width});
-    }else{
-        $nextTab.css({left: width});
+
     }
-    
+
     $('.current-tab').animate({ left: width }, {
         duration: 300,
         always: function () {
@@ -132,9 +130,17 @@ const animateTab = ($nextTab, direction) =>{
         duration: 300,
         always: function () {
              $nextTab.addClass('current-tab');
+             
+            if(indexFrom < indexTo){
+                $('.current-tab').prevAll().css({left: width});
+            }else{
+                $('.current-tab').nextAll().css({left: width});
+            }
         }
     });
+    
 }
+
 let booting = true;
 
 const loadView = async(id) => {
@@ -162,7 +168,6 @@ const loadView = async(id) => {
                 $('#list-b li:first-child').addClass('active');
                 animateTab($('#playlist'));
                 listConfig();
-                sdrag();
                 break;
             }
         case "tab-all":
@@ -186,7 +191,6 @@ const loadView = async(id) => {
                 $('#list-b li:first-child').addClass('active');
                 animateTab($('#folders'));
                 foldersConfig(listB.rows);
-                sdrag();
                 break;
             }
 
@@ -223,26 +227,7 @@ $("#a-player").on("wheel", (e) => {
     }
 });
 /************************************************************************************************* */
-$(() => {
-    let tempConfig = local.getObject('config');
-    if (tempConfig) {
-        console.log("loading config", tempConfig)
-        config = tempConfig;
-    }
 
-    player.volume = volcontrol.value = parseFloat(config.volume);
-    btnShuffler.checked = config.shuffle;
-
-    db.init().then(() => {
-        createBackgroundWin('scan-dirs');
-        db.list.findOne({ where: { Name: '000RCPLST' } }).then(list => {
-            list.getFiles({ order: ['NameNormalize'] }).then(files => {
-                loadPlayList(files.map(f => f.Id));
-                loadView('tab-playing');
-            });
-        });
-    });
-});
 $('#container').on('dblclick', '.fas, .far, .fa', (e) => {
     e.stopPropagation();
 });
@@ -294,3 +279,25 @@ const openList = async() => {
         loadView($('#nav-menu input[type=radio]:checked')[0].id);
     }
 }
+
+
+$(() => {
+    let tempConfig = local.getObject('config');
+    if (tempConfig) {
+        console.log("loading config", tempConfig)
+        config = tempConfig;
+    }
+
+    player.volume = volcontrol.value = parseFloat(config.volume);
+    btnShuffler.checked = config.shuffle;
+
+    db.init().then(() => {
+        createBackgroundWin('scan-dirs');
+        db.list.findOne({ where: { Name: '000RCPLST' } }).then(list => {
+            list.getFiles({ order: ['NameNormalize'] }).then(files => {
+                loadPlayList(files.map(f => f.Id));
+                loadView('tab-playing');
+            });
+        });
+    });
+});
